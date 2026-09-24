@@ -1,0 +1,12 @@
+This ZIP is the authoritative WeatherGPT build `20260905-v5`. Before editing, read README.md, docs/PROJECT_STATE.json, docs/BACKEND_N8N_COMPLETE_SETUP_GUIDE.md, frontend/data/features.json and all 14 n8n workflow JSON files.
+
+Key rules:
+- Capability count is EXACTLY 100.
+- Capability 61 is ONE Activity Intelligence Engine with 8 profiles: Running, Walking, Cycling, Cricket, Football, Photography, Laundry Drying, Outdoor Event. Do not split these back into separate capability IDs.
+- Capabilities 94-100 are Weather Route Intelligence, Campus Weather Mode, Event Weather Planner, AI Trip Weather Planner, Weather Scenario Simulator, Heat Stress Intelligence and Indian Languages Mode.
+- Firebase email/password authentication is required. Email verification must remain mandatory before index.html/features.html unlock.
+- Firebase config lives in frontend/firebase-config.js. Gemini keys must never be moved into frontend files.
+- n8n is the orchestration backend and contains 14 workflows.
+- Preserve source integrity: official SACHET != WeatherGPT derived risk; EONET is supporting intelligence; citizen reports are unverified; simulations/nowcast must be labelled.
+- Keep the bright festival frontend; do not restore the obsolete dark dashboard.
+- After changes run scripts/check_project.py and scripts/check_100_features.py.

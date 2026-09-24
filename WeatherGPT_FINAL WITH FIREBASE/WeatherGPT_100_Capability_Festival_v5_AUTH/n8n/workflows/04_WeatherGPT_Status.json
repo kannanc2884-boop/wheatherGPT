@@ -1,0 +1,102 @@
+{
+  "name": "WeatherGPT - Status Healthcheck",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "weathergpt-status",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "s-webhook",
+      "name": "Status Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -260,
+        0
+      ],
+      "webhookId": "weathergpt-status"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{ok:true,status:'WeatherGPT n8n orchestration online',time:new Date().toISOString(),services:['weather','risk-engine','planner','Gemini-adapter','SACHET-alerts','NASA-EONET-v3']}}];"
+      },
+      "id": "s-code",
+      "name": "Build Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "s-response",
+      "name": "Return Status",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        220,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Status Request": {
+      "main": [
+        [
+          {
+            "node": "Build Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Status": {
+      "main": [
+        [
+          {
+            "node": "Return Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "42cb34b8-d76f-45e6-b188-ab03ce4a0204",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -1,0 +1,152 @@
+{
+  "name": "WeatherGPT 100 - Live Map Grid",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-map-grid",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w7-1",
+      "name": "Grid Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -800,
+        0
+      ],
+      "webhookId": "weathergpt-map-grid"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json; const lat=Number(b.latitude??8.18), lon=Number(b.longitude??77.43), step=Number(b.step??0.18); const points=[]; for(let y=-1;y<=1;y++) for(let x=-1;x<=1;x++) points.push({latitude:+(lat+y*step).toFixed(5),longitude:+(lon+x*step).toFixed(5)}); return [{json:{center:{latitude:lat,longitude:lon},points,latitudes:points.map(p=>p.latitude).join(','),longitudes:points.map(p=>p.longitude).join(',')}}];"
+      },
+      "id": "w7-2",
+      "name": "Build Grid",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{$json.latitudes}}&longitude={{$json.longitudes}}&current=temperature_2m,precipitation,wind_speed_10m,cloud_cover,weather_code&timezone=auto",
+        "options": {}
+      },
+      "id": "w7-3",
+      "name": "Open-Meteo Grid",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const meta=$('Build Grid').first().json; const raw=$json; const arr=Array.isArray(raw)?raw:[raw]; const points=meta.points.map((p,i)=>{const c=arr[i]?.current||{}; return {...p,temperature:c.temperature_2m??null,precipitation:c.precipitation??null,wind:c.wind_speed_10m??null,cloud:c.cloud_cover??null,weatherCode:c.weather_code??null};}); return [{json:{center:meta.center,points,source:'Open-Meteo live 3x3 grid',generatedAt:new Date().toISOString()}}];"
+      },
+      "id": "w7-4",
+      "name": "Package Grid",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w7-5",
+      "name": "Return Grid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        210,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Grid Request": {
+      "main": [
+        [
+          {
+            "node": "Build Grid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Grid": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Grid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Grid": {
+      "main": [
+        [
+          {
+            "node": "Package Grid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Package Grid": {
+      "main": [
+        [
+          {
+            "node": "Return Grid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "weathergpt-07-live-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

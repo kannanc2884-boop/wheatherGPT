@@ -1,0 +1,1019 @@
+[
+  {
+    "id": 1,
+    "name": "Natural-language weather questions",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Ask normal questions such as “Will it rain at 5 PM?”; n8n grounds the answer in the current weather payload before Gemini responds.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 2,
+    "name": "Rain questions",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Answers rain-specific questions using hourly precipitation probability and rainfall values instead of guessing from the condition label.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 3,
+    "name": "Umbrella recommendations",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Converts upcoming precipitation probability into a simple carry-an-umbrella decision with the reason shown to the user.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 4,
+    "name": "Simple weather explanations",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Translates technical weather values into plain-language summaries for non-technical users.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 5,
+    "name": "Follow-up questions",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Keeps the current weather and conversation context available so a user can ask follow-up questions without repeating the location.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 6,
+    "name": "Conversation memory",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Stores lightweight conversation history in the browser and passes relevant context to the n8n AI workflow for the prototype.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 7,
+    "name": "Location-aware responses",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses the searched city or coordinates as context for every forecast, risk and AI response.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 8,
+    "name": "Time-aware weather questions",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Maps phrases such as “this evening” or “tomorrow morning” to hourly/daily forecast windows before producing an answer.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 9,
+    "name": "Compare two locations",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Fetches a second city and compares temperature, rain probability and derived risk side by side.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 10,
+    "name": "AI-generated daily weather summary",
+    "category": "AI Assistant",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Builds a concise daily briefing from live forecast, risk, activity and alert context.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 11,
+    "name": "Current temperature",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays current temperature from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 12,
+    "name": "Feels-like temperature",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays feels-like temperature from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 13,
+    "name": "Minimum / maximum temperature",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays minimum / maximum temperature from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 14,
+    "name": "Humidity",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays humidity from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 15,
+    "name": "Wind speed",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays wind speed from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 16,
+    "name": "Wind direction",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays wind direction from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 17,
+    "name": "Atmospheric pressure",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays atmospheric pressure from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 18,
+    "name": "Visibility",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays visibility from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 19,
+    "name": "Cloud cover",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays cloud cover from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 20,
+    "name": "UV index",
+    "category": "Core Weather",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Displays uv index from the live Open-Meteo weather payload and makes it available to the dashboard, risk engine and AI context.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 21,
+    "name": "Hourly forecast",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide hourly forecast and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 22,
+    "name": "24-hour forecast",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide 24-hour forecast and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 23,
+    "name": "7-day forecast",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide 7-day forecast and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 24,
+    "name": "Rain probability",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide rain probability and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 25,
+    "name": "Expected rainfall amount",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide expected rainfall amount and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 26,
+    "name": "Thunderstorm probability / signal",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Detects thunderstorm weather codes in the hourly forecast and raises a thunderstorm signal used by the risk engine.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 27,
+    "name": "Temperature trend",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide temperature trend and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 28,
+    "name": "Wind trend",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide wind trend and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 29,
+    "name": "Sunrise / sunset",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo hourly/daily forecast arrays to provide sunrise / sunset and feeds the result into charts, planning and WeatherGPT answers.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 30,
+    "name": "Forecast comparison",
+    "category": "Forecasting",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Compares forecast signals and, where enabled, multi-model outputs so the UI can expose agreement instead of a single opaque forecast.",
+    "source": "Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 31,
+    "name": "Heat risk score",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent heat risk score from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 32,
+    "name": "Rain risk score",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent rain risk score from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 33,
+    "name": "Lightning / thunderstorm risk",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent lightning / thunderstorm risk from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 34,
+    "name": "Flood-risk indicator",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Combines heavy precipitation, storm and recent-weather signals into a prototype flood-risk indicator; it is not an official flood warning.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 35,
+    "name": "Strong-wind risk",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent strong-wind risk from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 36,
+    "name": "Visibility risk",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent visibility risk from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 37,
+    "name": "Outdoor safety score",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent outdoor safety score from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 38,
+    "name": "Travel safety score",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent travel safety score from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 39,
+    "name": "Overall weather-risk score",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Calculates a transparent overall weather-risk score from forecast variables with deterministic JavaScript/n8n rules, then exposes the contributing reasons.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 40,
+    "name": "Explainable risk reasons",
+    "category": "Risk Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Shows which inputs contributed to the risk score so the score is explainable rather than a black box.",
+    "source": "WeatherGPT rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 41,
+    "name": "Official alert integration",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Combines authoritative NDMA SACHET alerts with NASA EONET natural-event intelligence while keeping WeatherGPT-derived scores clearly separate.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 42,
+    "name": "District / state warning matching",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Matches official alerts to the searched state/district and also checks NASA EONET events within a configurable geographic radius.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 43,
+    "name": "Extreme-rain alerts",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Surfaces authoritative heavy-rain alerts when present and augments situational awareness with nearby EONET events.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 44,
+    "name": "Lightning / thunderstorm warnings",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Shows official thunderstorm/lightning warnings when available and relates them to current forecast risk.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 45,
+    "name": "Heat-wave warnings",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Shows official heat-wave warnings when available and compares them with the local heat-risk calculation.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 46,
+    "name": "Cyclone information scanner",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses NASA EONET severe-storm events plus official warning data to provide a cyclone/severe-storm situational scanner.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 47,
+    "name": "Flood guidance",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Provides prototype flood-safety guidance from forecast/risk inputs while keeping official warnings visually distinct.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 48,
+    "name": "Disaster response mode",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Switches the assistant into disaster-response guidance mode with alerts, EONET events, safety actions and source-first language.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 49,
+    "name": "Emergency recommendations",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Generates practical emergency precautions from the hazard type without presenting AI guidance as an official authority instruction.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 50,
+    "name": "Disaster event timeline",
+    "category": "Disaster Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Builds a timeline/list of nearby NASA EONET natural events using event title, category, date, coordinates and source links.",
+    "source": "NDMA SACHET + NASA EONET + WeatherGPT",
+    "workflow": "13_NASA_EONET_Disaster_Intelligence.json"
+  },
+  {
+    "id": 51,
+    "name": "Home location saving",
+    "category": "Personalization",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Uses browser localStorage and n8n context to provide home location saving without requiring paid authentication or a cloud database.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 52,
+    "name": "Favourite locations",
+    "category": "Personalization",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Uses browser localStorage and n8n context to provide favourite locations without requiring paid authentication or a cloud database.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 53,
+    "name": "User weather preferences",
+    "category": "Personalization",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Uses browser localStorage and n8n context to provide user weather preferences without requiring paid authentication or a cloud database.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 54,
+    "name": "Daily weather briefing",
+    "category": "Personalization",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Generates a reusable daily summary containing weather, risk, useful time windows and active alerts.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 55,
+    "name": "Morning forecast brief",
+    "category": "Personalization",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "n8n can execute a scheduled morning briefing for the configured home location using the same zero-cost data stack.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 56,
+    "name": "Evening forecast brief",
+    "category": "Personalization",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Produces an evening-oriented summary using the upcoming nighttime and next-morning forecast window.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 57,
+    "name": "Personal rain alert",
+    "category": "Personalization",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Uses the saved rain threshold/preferences to decide whether a browser rain alert should be offered.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 58,
+    "name": "Personal heat alert",
+    "category": "Personalization",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Uses apparent temperature and saved preferences to generate a personal heat alert.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 59,
+    "name": "Severe-weather browser alert",
+    "category": "Personalization",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Uses browser Notification permission to surface severe-weather reminders without a paid SMS/WhatsApp gateway.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 60,
+    "name": "Personalized recommendation engine",
+    "category": "Personalization",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Combines saved location, preferences, risk and activity scores to personalize recommendations.",
+    "source": "localStorage + n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 61,
+    "name": "Activity Intelligence Engine",
+    "category": "Activity Intelligence",
+    "implementation": "frontend+n8n deterministic scoring",
+    "status": "LIVE",
+    "description": "One explainable activity-intelligence feature with eight profiles: Running, Walking, Cycling, Cricket, Football, Photography, Laundry Drying and Outdoor Event. Each profile applies activity-specific weather penalties without being counted as a separate major capability.",
+    "source": "WeatherGPT scoring rules + Open-Meteo",
+    "workflow": "01 Weather Core + frontend Activity Intelligence",
+    "profiles": [
+      "Running",
+      "Walking",
+      "Cycling",
+      "Cricket",
+      "Football",
+      "Photography",
+      "Laundry Drying",
+      "Outdoor Event"
+    ]
+  },
+  {
+    "id": 62,
+    "name": "Best outdoor time",
+    "category": "Activity Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Scans the next 24 hours in 3-hour windows and selects the lowest-risk outdoor window based on rain, wind, heat and UV.",
+    "source": "WeatherGPT scoring rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 63,
+    "name": "Activity recommendation engine",
+    "category": "Activity Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Transforms weather and risk variables into activity-specific advice instead of showing only raw weather values.",
+    "source": "WeatherGPT scoring rules + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 64,
+    "name": "Interactive weather map",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Displays the searched location and intelligence layers on an interactive Leaflet/OpenStreetMap map.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 65,
+    "name": "Temperature map layer",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Builds temperature points/tiles from the n8n map-grid workflow for a prototype temperature layer.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 66,
+    "name": "Rainfall map layer",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Builds precipitation values over a local map grid for a prototype rainfall layer.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 67,
+    "name": "Wind visualization",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Displays wind values/direction from forecast-grid data to provide spatial wind context.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 68,
+    "name": "Cloud layer",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Uses cloud-cover/condition data in the map-grid layer to represent cloud conditions.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 69,
+    "name": "Warning-region layer",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Places matched official-warning and NASA EONET hazard locations on the map without relabelling derived risk as official.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 70,
+    "name": "Current-location marker",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Marks the user-selected or geolocated coordinates on the interactive map.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 71,
+    "name": "Forecast timeline slider",
+    "category": "Maps & Visualization",
+    "implementation": "Leaflet/OpenStreetMap+n8n grid",
+    "status": "LIVE",
+    "description": "Lets the map/grid data be associated with forecast time so the prototype can step through upcoming conditions.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 72,
+    "name": "Animated weather cards",
+    "category": "Maps & Visualization",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Uses animated cards, counters, hover motion, background weather shapes and scrolling marquee effects to make the dashboard feel live.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 73,
+    "name": "Weather charts",
+    "category": "Maps & Visualization",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Shows hourly temperature and rain charts with Chart.js for fast visual interpretation.",
+    "source": "Leaflet + OpenStreetMap + Open-Meteo",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 74,
+    "name": "Travel mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for travel mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 75,
+    "name": "Agriculture mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for agriculture mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 76,
+    "name": "Disaster response mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for disaster response mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 77,
+    "name": "Student / college mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for student / college mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 78,
+    "name": "Outdoor sports mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for outdoor sports mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 79,
+    "name": "Marine weather mode",
+    "category": "Specialized Modes",
+    "implementation": "Open-Meteo Marine+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo Marine data through n8n for wave/wind context; it is prototype guidance, not certified navigation data.",
+    "source": "Open-Meteo Marine",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 80,
+    "name": "Event planner mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for event planner mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 81,
+    "name": "Health / comfort mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for health / comfort mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 82,
+    "name": "Smart city mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for smart city mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 83,
+    "name": "Research mode",
+    "category": "Specialized Modes",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Reuses the same verified weather/alert context but changes the assistant and scoring priorities for research mode.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 84,
+    "name": "Multilingual assistant",
+    "category": "Advanced",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Lets the AI response language switch between English, Tamil and Hindi while keeping the same grounded weather context.",
+    "source": "n8n + Gemini + grounded weather data",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 85,
+    "name": "Voice questions",
+    "category": "Advanced",
+    "implementation": "Browser Web Speech API",
+    "status": "LIVE",
+    "description": "Uses the browser Web Speech Recognition interface to convert spoken questions into text at zero API cost where supported.",
+    "source": "Browser Web Speech API",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 86,
+    "name": "Voice weather briefing",
+    "category": "Advanced",
+    "implementation": "Browser Web Speech API",
+    "status": "LIVE",
+    "description": "Uses browser speech synthesis to read WeatherGPT answers aloud where supported.",
+    "source": "Browser Web Speech API",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 87,
+    "name": "Weather-source citations",
+    "category": "Advanced",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Keeps source labels visible for Open-Meteo, NDMA SACHET, NASA EONET, OpenStreetMap and AI-derived results.",
+    "source": "frontend+n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 88,
+    "name": "Multi-model forecast verification",
+    "category": "Advanced",
+    "implementation": "ECMWF+GFS+ICON via Open-Meteo+n8n",
+    "status": "LIVE",
+    "description": "Queries multiple numerical weather-model outputs through the Open-Meteo model interfaces and compares their key forecast values.",
+    "source": "Open-Meteo multi-model",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 89,
+    "name": "Forecast confidence score",
+    "category": "Advanced",
+    "implementation": "ECMWF+GFS+ICON via Open-Meteo+n8n",
+    "status": "LIVE",
+    "description": "Converts cross-model agreement into a prototype confidence indicator so users can see when models disagree.",
+    "source": "Open-Meteo multi-model",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 90,
+    "name": "Citizen weather reporting",
+    "category": "Advanced",
+    "implementation": "localStorage+n8n",
+    "status": "LIVE",
+    "description": "Accepts a local community weather report through an n8n webhook and labels it as community-supplied, never official.",
+    "source": "localStorage+n8n",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 91,
+    "name": "Weather anomaly detection",
+    "category": "Advanced",
+    "implementation": "Open-Meteo Forecast past_days+n8n",
+    "status": "LIVE",
+    "description": "Compares recent observations/forecast past-days values with current conditions to flag unusual changes.",
+    "source": "Open-Meteo past_days",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 92,
+    "name": "Recent-history analytics",
+    "category": "Advanced",
+    "implementation": "Open-Meteo Forecast past_days+n8n",
+    "status": "LIVE",
+    "description": "Uses Open-Meteo Forecast past_days data for recent-history trends without requiring the paid long-term historical API.",
+    "source": "Open-Meteo past_days",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 93,
+    "name": "Experimental local nowcast model",
+    "category": "Advanced",
+    "implementation": "n8n local trend/persistence model",
+    "status": "EXPERIMENTAL",
+    "description": "Runs a clearly labelled experimental trend/persistence nowcast in n8n. It is a prototype model and is never presented as a meteorological authority forecast.",
+    "source": "n8n experimental local model",
+    "workflow": "See workflow map"
+  },
+  {
+    "id": 94,
+    "name": "Weather Route Intelligence",
+    "category": "Decision Intelligence",
+    "implementation": "frontend+n8n+Open-Meteo+Leaflet",
+    "status": "LIVE",
+    "description": "Builds an origin-to-destination weather corridor, samples weather along the path, highlights the highest-risk point and visualizes the corridor on a map. It is weather planning, not turn-by-turn navigation.",
+    "source": "Open-Meteo + WeatherGPT route scoring + Leaflet",
+    "workflow": "14 WeatherGPT Decision Studio",
+    "majorGroup": "Decision Studio"
+  },
+  {
+    "id": 95,
+    "name": "Campus Weather Mode",
+    "category": "Decision Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Turns the current local forecast into a campus-day timeline for commute, midday movement, sports/outdoor time and evening departure with explainable GO/CAUTION/AVOID signals.",
+    "source": "Open-Meteo + WeatherGPT campus rules",
+    "workflow": "14 WeatherGPT Decision Studio",
+    "majorGroup": "Decision Studio"
+  },
+  {
+    "id": 96,
+    "name": "Event Weather Planner",
+    "category": "Decision Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Evaluates a selected event date, start time and duration inside the available forecast window and returns an outdoor-event suitability score, key risks and a backup-plan recommendation.",
+    "source": "Open-Meteo hourly forecast + WeatherGPT event scoring",
+    "workflow": "14 WeatherGPT Decision Studio",
+    "majorGroup": "Decision Studio"
+  },
+  {
+    "id": 97,
+    "name": "AI Trip Weather Planner",
+    "category": "Decision Intelligence",
+    "implementation": "frontend+n8n+Gemini",
+    "status": "LIVE",
+    "description": "Compares weather across multiple trip stops for a chosen forecast date, ranks the stops by weather suitability and can ask the grounded Gemini workflow to produce a concise trip-weather plan.",
+    "source": "Open-Meteo + n8n + Gemini grounded planning",
+    "workflow": "01 Weather Core + 02 Gemini Copilot + 14 Decision Studio",
+    "majorGroup": "Decision Studio"
+  },
+  {
+    "id": 98,
+    "name": "Weather Scenario Simulator",
+    "category": "Decision Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Lets the user change hypothetical temperature, rain, wind, UV and thunderstorm values and recomputes a simulated WeatherGPT risk score beside the real current risk. Simulations are clearly labelled as non-forecasts.",
+    "source": "WeatherGPT deterministic risk rules",
+    "workflow": "14 WeatherGPT Decision Studio",
+    "majorGroup": "Decision Studio"
+  },
+  {
+    "id": 99,
+    "name": "Heat Stress Intelligence",
+    "category": "Decision Intelligence",
+    "implementation": "frontend+n8n",
+    "status": "LIVE",
+    "description": "Combines apparent temperature, humidity, UV and wind into an explainable outdoor heat-burden score and general comfort precautions. It is not a medical diagnosis or clinical heat index service.",
+    "source": "Open-Meteo + WeatherGPT heat-burden rules",
+    "workflow": "14 WeatherGPT Decision Studio",
+    "majorGroup": "Decision Studio"
+  },
+  {
+    "id": 100,
+    "name": "Indian Languages Mode",
+    "category": "Accessibility & Language",
+    "implementation": "frontend+n8n+Gemini+browser speech",
+    "status": "LIVE",
+    "description": "Lets the WeatherGPT copilot answer and speak weather briefings in multiple Indian languages including Hindi, Tamil, Telugu, Malayalam, Kannada, Bengali, Marathi, Gujarati, Punjabi, Odia, Assamese and Urdu.",
+    "source": "Gemini grounded copilot + browser speech APIs",
+    "workflow": "02 WeatherGPT AI Chat Gemini",
+    "majorGroup": "Language & Accessibility"
+  }
+]

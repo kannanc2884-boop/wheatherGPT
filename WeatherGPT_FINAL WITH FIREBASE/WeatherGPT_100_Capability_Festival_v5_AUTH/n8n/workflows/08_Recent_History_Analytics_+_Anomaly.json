@@ -1,0 +1,152 @@
+{
+  "name": "WeatherGPT 100 - Live Recent History + Anomaly",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-history",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w8-1",
+      "name": "History Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        0
+      ],
+      "webhookId": "weathergpt-history"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json; return [{json:{latitude:Number(b.latitude??8.18),longitude:Number(b.longitude??77.43),days:Math.max(7,Math.min(92,Number(b.days||30)))}}];"
+      },
+      "id": "w8-2",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{$json.latitude}}&longitude={{$json.longitude}}&past_days={{$json.days}}&forecast_days=1&daily=temperature_2m_mean,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto",
+        "options": {}
+      },
+      "id": "w8-3",
+      "name": "Open-Meteo Recent History",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -250,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input=$('Normalize Input').first().json; const d=$json.daily||{}; const vals=(d.temperature_2m_mean||[]).filter(Number.isFinite); const prior=vals.slice(0,-1); const latest=vals.at(-1)??null; const avg=prior.length?prior.reduce((a,c)=>a+c,0)/prior.length:null; const anomaly=avg!=null&&latest!=null?latest-avg:null; const rain=(d.precipitation_sum||[]).filter(Number.isFinite); return [{json:{windowDays:input.days,meanTemperature:avg,latestMeanTemperature:latest,currentVsMean:anomaly,anomalyFlag:Math.abs(anomaly||0)>=5,totalPrecipitation:rain.reduce((a,c)=>a+c,0),wetDays:rain.filter(x=>x>=1).length,series:(d.time||[]).map((t,i)=>({date:t,temperature:d.temperature_2m_mean?.[i]??null,rain:d.precipitation_sum?.[i]??null})),source:'Open-Meteo Forecast API past_days',note:'Recent-history prototype analytics, not long-term climatology.'}}];"
+      },
+      "id": "w8-4",
+      "name": "Analyze Recent Window",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w8-5",
+      "name": "Return History",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        250,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "History Request": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Recent History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Recent History": {
+      "main": [
+        [
+          {
+            "node": "Analyze Recent Window",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Recent Window": {
+      "main": [
+        [
+          {
+            "node": "Return History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "weathergpt-08-live-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

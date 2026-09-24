@@ -1,0 +1,205 @@
+{
+  "name": "WeatherGPT 100 - Live Multi-Model Consensus",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-consensus",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w9-1",
+      "name": "Consensus Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -980,
+        0
+      ],
+      "webhookId": "weathergpt-consensus"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json; return [{json:{latitude:Number(b.latitude??8.18),longitude:Number(b.longitude??77.43)}}];"
+      },
+      "id": "w9-2",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{$json.latitude}}&longitude={{$json.longitude}}&models=ecmwf_ifs025&current=temperature_2m&hourly=precipitation_probability&forecast_hours=6&timezone=auto",
+        "options": {}
+      },
+      "id": "w9-3",
+      "name": "ECMWF IFS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -520,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{$('Normalize Input').first().json.latitude}}&longitude={{$('Normalize Input').first().json.longitude}}&models=ncep_gfs_seamless&current=temperature_2m&hourly=precipitation_probability&forecast_hours=6&timezone=auto",
+        "options": {}
+      },
+      "id": "w9-4",
+      "name": "GFS Seamless",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -280,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{$('Normalize Input').first().json.latitude}}&longitude={{$('Normalize Input').first().json.longitude}}&models=icon_seamless&current=temperature_2m&hourly=precipitation_probability&forecast_hours=6&timezone=auto",
+        "options": {}
+      },
+      "id": "w9-5",
+      "name": "ICON Seamless",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const pull=(name,node)=>{const j=$(node).first()?.json||{}; const rain=(j.hourly?.precipitation_probability||[]).filter(Number.isFinite); return {name,temperature:Number.isFinite(j.current?.temperature_2m)?j.current.temperature_2m:null,rainProbability:rain.length?Math.max(...rain):null,available:!j.error};}; const models=[pull('ECMWF IFS 0.25\u00b0','ECMWF IFS'),pull('NOAA GFS Seamless','GFS Seamless'),pull('DWD ICON Seamless','ICON Seamless')].filter(m=>m.temperature!=null||m.rainProbability!=null); const spread=a=>a.length?Math.max(...a)-Math.min(...a):null; const temps=models.map(x=>x.temperature).filter(Number.isFinite),rains=models.map(x=>x.rainProbability).filter(Number.isFinite); const t=spread(temps),r=spread(rains); const confidence=models.length<2?0:Math.max(0,Math.min(100,Math.round(100-(t||0)*8-(r||0)*.35))); return [{json:{models,availableModels:models.length,temperatureSpread:t,rainSpread:r,confidence,label:confidence>=80?'HIGH':confidence>=55?'MEDIUM':'LOW',source:'Open-Meteo explicit model selection',note:'Prototype model-agreement indicator, not formal probabilistic verification.'}}];"
+      },
+      "id": "w9-6",
+      "name": "Compute Consensus",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        210,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w9-7",
+      "name": "Return Consensus",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        470,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Consensus Request": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "ECMWF IFS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ECMWF IFS": {
+      "main": [
+        [
+          {
+            "node": "GFS Seamless",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GFS Seamless": {
+      "main": [
+        [
+          {
+            "node": "ICON Seamless",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ICON Seamless": {
+      "main": [
+        [
+          {
+            "node": "Compute Consensus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Consensus": {
+      "main": [
+        [
+          {
+            "node": "Return Consensus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "weathergpt-09-live-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -1,0 +1,40 @@
+WEATHERGPT PROJECT HANDOFF - READ BEFORE DOING ANY WORK
+
+I am giving you my WeatherGPT project ZIP. This is an existing project; do not redesign its architecture from assumptions.
+
+FIRST ACTIONS:
+1. Read `docs/MASTER_PROJECT_HANDOFF.md` completely.
+2. Read `docs/PROJECT_STATE.json` as the structured source of truth.
+3. Inspect `frontend/data/features.json` (exactly 100 capability definitions).
+4. Inspect all JSON files in `n8n/workflows/` (13 workflows).
+5. Inspect `frontend/index.html`, `style.css`, `script.js`, and `features.html/js/css` before editing.
+
+PROJECT IDENTITY:
+- WeatherGPT is an AI-powered weather decision + disaster situational-intelligence prototype.
+- n8n is the primary local orchestration backend.
+- Data sources: Open-Meteo weather/AQI/geocoding, NDMA SACHET official Indian alerts, NASA EONET v3 natural events, Gemini Developer API for grounded AI explanations, Leaflet/OpenStreetMap for maps.
+- Frontend design is a bright, original tech-festival experience inspired only at a high level by VIT graVITas: cream + electric blue + acid lime + coral/yellow/sky/pink, oversized typography, marquees, orbit motion, floating tickets, bento modules and scroll reveals. Do NOT turn it back into a generic dark dashboard.
+- Prototype budget target is INR 0; server/production costs are deferred.
+
+CRITICAL MATURITY FACT:
+- End-to-end UI-connected workflows: 01 Weather Core, 02 Gemini Chat, 03 SACHET Alerts, 04 Status, 13 NASA EONET.
+- Scheduled module: 05 Morning Brief.
+- Advanced modules 06-12 are implemented as n8n processors/scaffolds but are not all directly invoked by the current main UI; several require upstream API-fetch nodes or explicit UI wiring. Never claim otherwise.
+
+SOURCE INTEGRITY:
+- WeatherGPT risk = derived heuristic, NOT official warning.
+- NDMA SACHET = official Indian alert channel.
+- NASA EONET = NASA natural-event catalogue, NOT local emergency authority.
+- Citizen reports = unverified community data.
+- Marine/flood/nowcast = prototype guidance.
+- Feature 100 must remain EXPERIMENTAL.
+
+WHEN I ASK YOU TO MODIFY THE PROJECT:
+- Preserve working features and IDs.
+- Read actual files before editing.
+- Keep n8n-first architecture unless I explicitly approve a change.
+- Keep secrets server-side.
+- Test changed files and update MASTER_PROJECT_HANDOFF.md + PROJECT_STATE.json when architecture/capability status changes.
+- Re-verify current APIs/model names if the change depends on external services.
+
+Current handoff verified: 2026-08-28.

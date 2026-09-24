@@ -1,0 +1,131 @@
+{
+  "name": "WeatherGPT - Official SACHET Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-alerts",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "a-webhook",
+      "name": "Alert Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -540,
+        0
+      ],
+      "webhookId": "weathergpt-alerts"
+    },
+    {
+      "parameters": {
+        "url": "https://sachet.ndma.gov.in/cap_public_website/rss/rss_india.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "id": "a-rss",
+      "name": "NDMA SACHET RSS Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const req=$('Alert Request').first().json.body||{};\nconst needles=[req.city,req.district,req.state].filter(Boolean).map(x=>String(x).toLowerCase().replace(/[_-]/g,' ').trim());\nconst clean=s=>String(s||'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\\s+/g,' ').trim();\nconst items=$input.all().map((i,idx)=>{const a=i.json||{};const title=clean(a.title),summary=clean(a.contentSnippet||a.content||a.description||''),creator=clean(a.creator||a.author||'NDMA SACHET');const hay=(title+' '+summary+' '+creator).toLowerCase().replace(/[_-]/g,' ');return{title,summary,source:creator||'NDMA SACHET CAP',link:a.link||a.guid||'',date:a.isoDate||a.pubDate||'',hay,idx}});\nlet matched=needles.length?items.filter(a=>needles.some(n=>n.length>2&&a.hay.includes(n))):items;\nmatched=matched.slice(0,8).map(({hay,idx,...a})=>a);\nreturn [{json:{official:true,source:'NDMA SACHET CAP/RSS',feedUrl:'https://sachet.ndma.gov.in/cap_public_website/rss/rss_india.xml',locationQuery:{city:req.city||'',district:req.district||'',state:req.state||''},alerts:matched,matched:matched.length,totalFeedItems:items.length,refreshedAt:new Date().toISOString(),note:'Location matching is text-based for this prototype; always open the source alert for authoritative geography and instructions.'}}];"
+      },
+      "id": "a-filter",
+      "name": "Filter Alerts to Location",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -50,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "a-response",
+      "name": "Return Official Alerts",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        200,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Alert Request": {
+      "main": [
+        [
+          {
+            "node": "NDMA SACHET RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NDMA SACHET RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Filter Alerts to Location",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Alerts to Location": {
+      "main": [
+        [
+          {
+            "node": "Return Official Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "359ce490-28b6-4d06-8485-4eb3efc7ab03",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

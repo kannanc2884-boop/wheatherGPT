@@ -1,0 +1,103 @@
+{
+  "name": "WeatherGPT - Decision Studio (Capabilities 94-99)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-decision-studio",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w14-webhook",
+      "name": "Decision Studio Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -420,
+        0
+      ],
+      "webhookId": "weathergpt-decision-studio"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json, mode=b.mode||'unknown', p=b.payload||{};\nconst clamp=x=>Math.max(0,Math.min(100,Math.round(Number(x)||0)));\nconst riskLevel=s=>s>=81?'EXTREME':s>=61?'HIGH':s>=41?'ELEVATED':s>=21?'MODERATE':'LOW';\nlet out={mode,engine:'WeatherGPT Decision Studio v1',generatedAt:new Date().toISOString()};\nif(mode==='scenario'){\n let score=0,reasons=[]; const rain=Number(p.rain||0),wind=Number(p.wind||0),temp=Number(p.temp||0),uv=Number(p.uv||0);\n if(rain>=85){score+=30;reasons.push('very high rain')}else if(rain>=60){score+=18;reasons.push('rain likely')}else if(rain>=35){score+=8;reasons.push('possible rain')}\n if(wind>=55){score+=25;reasons.push('strong gusts')}else if(wind>=38){score+=13;reasons.push('gusty wind')}\n if(p.thunder){score+=30;reasons.push('thunderstorm signal')} if(temp>=42){score+=24;reasons.push('extreme heat')}else if(temp>=37){score+=12;reasons.push('high heat')} if(uv>=8){score+=10;reasons.push('very high UV')}\n score=clamp(score); out={...out,score,level:riskLevel(score),reasons:reasons.length?reasons:['no major simulated risk signal'],simulation:true,disclaimer:'Simulation only - not a forecast.'};\n}else if(mode==='heat'){\n const feels=Number(p.feels||0),humidity=Number(p.humidity||0),uv=Number(p.uv||0),wind=Number(p.wind||0); let score=clamp(Math.max(0,(feels-28)*5.5)+Math.max(0,humidity-60)*.35+Math.max(0,uv-6)*4-Math.max(0,wind-10)*.18); const level=score>=75?'VERY HIGH':score>=55?'HIGH':score>=30?'ELEVATED':'LOW'; out={...out,score,level,reasons:[`apparent temperature ${Math.round(feels)}°C`,humidity>=70?`humidity ${Math.round(humidity)}%`:null,uv>=8?`UV ${uv.toFixed(1)}`:null].filter(Boolean),disclaimer:'General outdoor-weather comfort guidance only; not a medical diagnosis.'};\n}else if(mode==='event'){\n const rain=Number(p.rain||0),temp=Number(p.temp||0),gust=Number(p.gust||0),uv=Number(p.uv||0); let score=clamp(100-rain*.45-Math.max(0,temp-32)*4-Math.max(0,gust-30)*1.35-Math.max(0,uv-6)*4-(p.thunder?55:0)); out={...out,score,label:score>=75?'GO':score>=50?'CAUTION':'BACKUP PLAN',reasons:[rain>=50?`Rain probability peaks near ${Math.round(rain)}%`:null,gust>=35?`Wind gusts near ${Math.round(gust)} km/h`:null,temp>=35?`Hot conditions near ${Math.round(temp)}°C`:null,uv>=8?`High UV near ${uv.toFixed(1)}`:null,p.thunder?'Thunderstorm signal in event window':null].filter(Boolean)};\n}else if(mode==='campus'){\n out={...out,segments:(p.segments||[]).map(s=>({...s,status:Number(s.risk)>=61?'AVOID':Number(s.risk)>=36?'CAUTION':'GO'}))};\n}else if(mode==='route'){\n const pts=p.points||[],worst=pts.reduce((a,b)=>Number(b.risk)>Number(a.risk)?b:a,pts[0]||{risk:0,label:'--'}),avg=pts.length?Math.round(pts.reduce((a,b)=>a+Number(b.risk||0),0)/pts.length):0,routeRisk=clamp(Number(worst.risk||0)*.65+avg*.35); out={...out,routeRisk,level:riskLevel(routeRisk),worstPoint:worst.label||'--',averageRisk:avg,summary:`Highest sampled weather risk is near ${worst.label||'the route corridor'}.`,disclaimer:'Weather corridor only - not navigation.'};\n}else if(mode==='trip'){\n const stops=[...(p.stops||[])].sort((a,b)=>Number(a.risk||0)-Number(b.risk||0)); out={...out,stops,best:stops[0]?.place||'--',worst:stops[stops.length-1]?.place||'--'};\n}else{out={...out,error:'Unsupported Decision Studio mode'};}\nreturn [{json:out}];"
+      },
+      "id": "w14-code",
+      "name": "Decision Intelligence Engine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w14-response",
+      "name": "Return Decision Intelligence",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        190,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Decision Studio Request": {
+      "main": [
+        [
+          {
+            "node": "Decision Intelligence Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision Intelligence Engine": {
+      "main": [
+        [
+          {
+            "node": "Return Decision Intelligence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "weathergpt-14-decision-studio-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

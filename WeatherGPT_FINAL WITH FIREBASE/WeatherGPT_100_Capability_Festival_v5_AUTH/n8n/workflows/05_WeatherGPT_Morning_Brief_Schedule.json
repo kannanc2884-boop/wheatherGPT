@@ -1,0 +1,115 @@
+{
+  "name": "WeatherGPT - Morning Brief Generator (Local)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 7,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "d-schedule",
+      "name": "Every Morning 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/weathergpt-weather",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\"location\":\"{{ $env.WEATHERGPT_HOME || 'Nagercoil' }}\"}",
+        "options": {}
+      },
+      "id": "d-weather",
+      "name": "Get Morning Weather",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -150,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const w=$json,I=w.insights||{};const r=I.risk||{};return [{json:{generatedAt:new Date().toISOString(),location:w.place?.name||$env.WEATHERGPT_HOME||'Nagercoil',brief:`${Math.round(w.current?.temperature_2m||0)}\u00b0C now. ${I.peakRain12h||0}% peak rain chance in 12h. Derived risk: ${r.score||0}/100 ${r.level||'LOW'}. Best outdoor window: ${I.bestOutdoorWindow?.start||'n/a'} to ${I.bestOutdoorWindow?.end||'n/a'}.`,note:'Prototype scheduled briefing generated locally by n8n; no paid notification channel is attached.'}}];"
+      },
+      "id": "d-brief",
+      "name": "Generate Morning Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        100,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d-stop",
+      "name": "Brief Ready (Inspect Execution)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        350,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Every Morning 07:00": {
+      "main": [
+        [
+          {
+            "node": "Get Morning Weather",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Morning Weather": {
+      "main": [
+        [
+          {
+            "node": "Generate Morning Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Morning Brief": {
+      "main": [
+        [
+          {
+            "node": "Brief Ready (Inspect Execution)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "712aed7c-9bcd-4f1e-8358-87ecaf06f805",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

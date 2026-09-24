@@ -1,0 +1,128 @@
+{
+  "name": "WeatherGPT - NASA EONET Disaster Intelligence",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-eonet",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "e-webhook",
+      "name": "EONET Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -700,
+        0
+      ],
+      "webhookId": "weathergpt-eonet"
+    },
+    {
+      "parameters": {
+        "url": "=https://eonet.gsfc.nasa.gov/api/v3/events?status=open&days={{ $json.body.days || 60 }}&limit=200",
+        "options": {}
+      },
+      "id": "e-fetch",
+      "name": "NASA EONET Events",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const req=$('EONET Request').first().json.body||{}; const lat=Number(req.latitude), lon=Number(req.longitude), radius=Number(req.radiusKm||500); if(!Number.isFinite(lat)||!Number.isFinite(lon)) throw new Error('latitude and longitude required'); const rad=x=>x*Math.PI/180; const dist=(a,b,c,d)=>{const R=6371,dp=rad(c-a),dl=rad(d-b);const h=Math.sin(dp/2)**2+Math.cos(rad(a))*Math.cos(rad(c))*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(h));}; const events=($json.events||[]).map(e=>{const g=(e.geometry||[]).slice().reverse().find(x=>x?.type==='Point'&&Array.isArray(x.coordinates)); if(!g)return null; const elon=Number(g.coordinates[0]),elat=Number(g.coordinates[1]),distanceKm=dist(lat,lon,elat,elon); return {id:e.id,title:e.title,description:e.description||'',categories:e.categories||[],sources:e.sources||[],geometry:e.geometry||[],lat:elat,lon:elon,date:g.date,distanceKm:Math.round(distanceKm),link:e.link,closed:e.closed};}).filter(e=>e&&e.distanceKm<=radius).sort((a,b)=>a.distanceKm-b.distanceKm).slice(0,25); return [{json:{ok:true,source:'NASA EONET v3',officialLocalWarning:false,note:'EONET is an open natural-event catalogue and does not replace official local emergency warnings.',query:{latitude:lat,longitude:lon,radiusKm:radius,days:Number(req.days||60)},matched:events.length,events}}];"
+      },
+      "id": "e-filter",
+      "name": "Filter by Radius",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "e-response",
+      "name": "Return EONET Intelligence",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        90,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "EONET Request": {
+      "main": [
+        [
+          {
+            "node": "NASA EONET Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NASA EONET Events": {
+      "main": [
+        [
+          {
+            "node": "Filter by Radius",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter by Radius": {
+      "main": [
+        [
+          {
+            "node": "Return EONET Intelligence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5a3a9a79-7953-4178-9b4e-0f29dbe1ebee",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

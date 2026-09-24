@@ -1,0 +1,203 @@
+{
+  "name": "WeatherGPT - Weather Core + Risk Planner",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-weather",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w-webhook",
+      "name": "Weather Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -920,
+        0
+      ],
+      "webhookId": "weathergpt-weather"
+    },
+    {
+      "parameters": {
+        "url": "=https://geocoding-api.open-meteo.com/v1/search?name={{ encodeURIComponent($json.body.location || $json.query.location || 'Nagercoil') }}&count=1&language=en&format=json",
+        "options": {}
+      },
+      "id": "w-geo",
+      "name": "Open-Meteo Geocoding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -700,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const p=$json.results?.[0]; if(!p) throw new Error('Location not found'); return [{json:{place:{name:p.name,country:p.country,admin1:p.admin1,admin2:p.admin2,latitude:p.latitude,longitude:p.longitude,timezone:p.timezone}}}];"
+      },
+      "id": "w-place",
+      "name": "Extract Place",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -470,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{$json.place.latitude}}&longitude={{$json.place.longitude}}&timezone=auto&forecast_days=7&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,surface_pressure,is_day&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index,visibility,apparent_temperature&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,uv_index_max",
+        "options": {}
+      },
+      "id": "w-forecast",
+      "name": "Open-Meteo Forecast",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://air-quality-api.open-meteo.com/v1/air-quality?latitude={{$('Extract Place').first().json.place.latitude}}&longitude={{$('Extract Place').first().json.place.longitude}}&current=european_aqi,pm10,pm2_5&timezone=auto",
+        "options": {}
+      },
+      "id": "w-aq",
+      "name": "Open-Meteo Air Quality",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const place=$('Extract Place').first().json.place;\nconst wx=$('Open-Meteo Forecast').first().json;\nconst aq=$json;\nconst current=wx.current||{},hourly=wx.hourly||{};\nconst times=hourly.time||[];\nlet idx=times.findIndex(t=>t>=(current.time||'').slice(0,13)+':00'); if(idx<0) idx=0;\nconst sl=(a,n=12)=>(a||[]).slice(idx,idx+n);\nconst rain=Math.max(...sl(hourly.precipitation_probability),0);\nconst gust=Math.max(...sl(hourly.wind_gusts_10m),current.wind_gusts_10m||0);\nconst uv=Math.max(...sl(hourly.uv_index),0);\nconst visVals=sl(hourly.visibility).filter(Number.isFinite); const minVis=visVals.length?Math.min(...visVals):100000;\nconst codes=sl(hourly.weather_code);\nlet score=0,reasons=[];\nif(rain>=85){score+=30;reasons.push('Very high rain probability')} else if(rain>=60){score+=18;reasons.push('Rain likely')} else if(rain>=35){score+=8;reasons.push('Possible rain')}\nif(gust>=55){score+=25;reasons.push('Strong wind gusts')} else if(gust>=38){score+=13;reasons.push('Gusty wind')}\nif(codes.some(c=>[95,96,99].includes(c))){score+=30;reasons.push('Thunderstorm signal')}\nconst feels=current.apparent_temperature??current.temperature_2m??0;\nif(feels>=42){score+=24;reasons.push('Extreme heat stress')} else if(feels>=37){score+=12;reasons.push('High heat')}\nif(uv>=8){score+=10;reasons.push('Very high UV')}\nif(minVis<3000){score+=12;reasons.push('Poor visibility')} else if(minVis<7000){score+=5;reasons.push('Reduced visibility')}\nscore=Math.min(100,score);\nconst level=score>=81?'EXTREME':score>=61?'HIGH':score>=41?'ELEVATED':score>=21?'MODERATE':'LOW';\nconst clamp=x=>Math.max(0,Math.min(100,Math.round(x)));\nconst activityBase=(rainW,heatW,windStart,windW,uvStart=7,uvW=3,storm=50,visPenalty=10)=>{let v=100-rain*rainW-Math.max(0,feels-31)*heatW-Math.max(0,gust-windStart)*windW-Math.max(0,uv-uvStart)*uvW-(codes.some(c=>[95,96,99].includes(c))?storm:0)-(minVis<3000?visPenalty:minVis<7000?visPenalty*.45:0);return clamp(v)};\nconst humidity=Number(current.relative_humidity_2m??60);\nconst activities={\n  Running:activityBase(.24,3.4,28,1.1,6,3.5,55,12),\n  Walking:activityBase(.17,2.6,38,.45,7,2.5,48,8),\n  Cycling:activityBase(.30,3.0,24,1.7,7,2.8,60,22),\n  Cricket:activityBase(.43,2.7,34,.9,7,2.8,65,12),\n  Football:activityBase(.28,3.3,35,.8,7,3.0,65,10),\n  Photography:activityBase(.12,1.1,45,.25,9,1.1,35,20),\n  Laundry:clamp(100-rain*.72-Math.max(0,humidity-65)*.75-Math.max(0,uv-11)*1.5+(gust>=8&&gust<=28?6:0)-(codes.some(c=>[95,96,99].includes(c))?45:0)),\n  'Outdoor event':activityBase(.38,3.1,30,1.1,6,3.3,70,16)\n};\nconst nextTimes=sl(hourly.time,24),temps=sl(hourly.temperature_2m,24),rains=sl(hourly.precipitation_probability,24),winds=sl(hourly.wind_speed_10m,24),uvs=sl(hourly.uv_index,24);\nlet best={score:-999,start:null,end:null,why:''};\nfor(let x=0;x+2<nextTimes.length;x++){let s=100;const rr=Math.max(...rains.slice(x,x+3),0),ww=Math.max(...winds.slice(x,x+3),0),tt=Math.max(...temps.slice(x,x+3),0),uu=Math.max(...uvs.slice(x,x+3),0);s-=rr*.55;s-=Math.max(0,ww-20)*1.1;s-=Math.max(0,tt-32)*4;s-=Math.max(0,uu-6)*4;if(s>best.score)best={score:Math.round(s),start:nextTimes[x],end:nextTimes[x+2],why:`${Math.round(rr)}% peak rain, ${Math.round(ww)} km/h wind`}}\nconst completeness=[current.temperature_2m,current.relative_humidity_2m,current.apparent_temperature,current.wind_speed_10m,hourly.precipitation_probability?.length,hourly.uv_index?.length,hourly.visibility?.length,wx.daily?.time?.length,aq?.current?.european_aqi].filter(v=>v!==undefined&&v!==null).length;\nreturn [{json:{...wx,place,airQuality:aq,insights:{risk:{score,level,reasons:reasons.length?reasons:['No major risk signal']},activities,bestOutdoorWindow:best,dataCompleteness:Math.round(completeness/9*100),recommendations:{umbrella:rain>=50,travel:score<61,outdoor:score<61},peakRain12h:Math.round(rain),peakUv12h:uv,minVisibility12h:minVis,generatedAt:new Date().toISOString(),engine:'WeatherGPT deterministic risk v1'}}}];"
+      },
+      "id": "w-risk",
+      "name": "Risk + Planner Engine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w-response",
+      "name": "Return Weather Intelligence",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        500,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Weather Request": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Geocoding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Geocoding": {
+      "main": [
+        [
+          {
+            "node": "Extract Place",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Place": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Forecast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Forecast": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Air Quality",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Air Quality": {
+      "main": [
+        [
+          {
+            "node": "Risk + Planner Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk + Planner Engine": {
+      "main": [
+        [
+          {
+            "node": "Return Weather Intelligence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "weathergpt-01-v4-activity-engine",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

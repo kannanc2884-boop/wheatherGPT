@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" class="auth-checking">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#f5f0e8" />
+  <meta name="description" content="WeatherGPT 100-capability atlas" />
+  <title>WeatherGPT — 100 Capability Atlas</title>
+  <script>
+    // Prevent old PWA/service-worker shell from hijacking Back to App.
+    (async()=>{try{if('serviceWorker' in navigator){for(const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();}if('caches' in window){for(const k of await caches.keys()) await caches.delete(k);}}catch(e){}})();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="features.css?v=20260905-v5" />
+  <link rel="stylesheet" href="auth.css?v=20260905-v5" />
+  <script>window.__WG_AUTH_REQUIRED__=true;</script>
+  <script src="firebase-config.js?v=20260905-v5"></script>
+  <script>(function(){const c=window.WEATHERGPT_FIREBASE_CONFIG||{};if(!c.apiKey||String(c.apiKey).startsWith('PASTE_')){const next=location.pathname.split('/').pop()+location.search;location.replace('login.html?reason=firebase-config&next='+encodeURIComponent(next));}})();</script>
+  <script type="module" src="auth-guard.js?v=20260905-v5"></script>
+</head>
+<body><div class="atlas-splash"><b>100</b><span>CAPABILITIES / ONE SYSTEM</span></div>
+  <div class="grain"></div><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>
+  <header class="feature-topbar festival-feature-nav">
+    <a class="feature-brand" href="index.html?build=20260905-v5"><span class="logo-disc">W</span><div><b>WeatherGPT</b><small>CAPABILITY ATLAS</small></div></a>
+    <nav><a href="index.html?build=20260905-v5">COMMAND CENTER</a><a class="active" href="features.html">100 FEATURES</a></nav>
+    <div class="account-shell"><button class="account-button" type="button" data-account-toggle><span class="account-avatar" id="accountInitial">W</span><span id="accountEmail">VERIFIED USER</span></button><div class="account-menu" id="accountMenu"><small><span class="verified-mark">● VERIFIED</span> WEATHERGPT ACCOUNT</small><b id="accountEmailMenu">Signed in</b><button type="button" data-auth-logout>SIGN OUT</button></div></div><a class="back-pill" href="index.html?build=20260905-v5">BACK TO APP ↗</a>
+  </header>
+
+  <main>
+    <section class="feature-hero">
+      <div class="hero-copy">
+        <span class="eyebrow">100 / PROTOTYPE CAPABILITIES</span>
+        <h1><span>100 capabilities.</span><br>One weather<br><em>intelligence system.</em></h1>
+        <p>This page lists exactly what each WeatherGPT capability does, which data source powers it, and whether it is live or experimental.</p>
+      </div>
+      <div class="hero-number" aria-hidden="true"><b>100</b><span>CAPABILITIES</span></div>
+      <div class="orbit-labels" aria-hidden="true"><span>WEATHER</span><span>AI</span><span>DISASTER</span><span>NASA</span></div>
+    </section>
+
+    <div class="ticker" aria-hidden="true"><div><span>OPEN-METEO</span><i>✦</i><span>n8n</span><i>✦</i><span>NASA EONET</span><i>✦</i><span>NDMA SACHET</span><i>✦</i><span>GEMINI</span><i>✦</i><span>LEAFLET</span><i>✦</i><span>OPENSTREETMAP</span><i>✦</i><span>OPEN-METEO</span><i>✦</i><span>n8n</span><i>✦</i><span>NASA EONET</span><i>✦</i><span>NDMA SACHET</span><i>✦</i><span>GEMINI</span><i>✦</i></div></div>
+
+    <section class="summary-band">
+      <article><strong id="totalCount">100</strong><span>TOTAL</span></article>
+      <article><strong id="liveCount">99</strong><span>LIVE PROTOTYPE</span></article>
+      <article><strong id="categoryCount">12</strong><span>CATEGORIES</span></article>
+      <article><strong>14</strong><span>n8n WORKFLOWS</span></article>
+      <article class="nasa-stat"><strong>NASA</strong><span>EONET V3 ADDED</span></article>
+    </section>
+
+    <section class="major-group-note"><div><span>MAJOR FEATURE GROUPING</span><h2>Activity Intelligence = one major engine.</h2><p>Running, walking, cycling, cricket, football, photography, laundry and outdoor-event scoring are now one capability: Activity Intelligence Engine. All eight profiles remain usable inside the engine.</p></div><b>8 PROFILES<br>→ 1 CAPABILITY</b></section>
+
+    <section class="atlas-shell">
+      <div class="atlas-head">
+        <div><span class="eyebrow">FILTER / EXPLORE</span><h2>Capability catalogue</h2></div>
+        <p>Click any card for a clearer explanation of how it works in this prototype.</p>
+      </div>
+      <div class="controls">
+        <label class="search"><span>⌕</span><input id="featureSearch" placeholder="Search feature name, source or description..." /></label>
+        <select id="featureCategory"><option value="all">ALL CATEGORIES</option></select>
+        <select id="featureStatus"><option value="all">ALL STATUS</option><option value="LIVE">LIVE</option><option value="EXPERIMENTAL">EXPERIMENTAL</option></select>
+      </div>
+      <div id="categoryChips" class="category-chips"></div>
+      <div class="result-line"><span><b id="featureCount">100</b> results</span><span>Official sources and derived intelligence are labelled separately.</span></div>
+      <div id="featureAtlas" class="feature-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="source-strip">
+      <div><span>OFFICIAL / OPEN DATA</span><h2>Source integrity is part of the feature.</h2></div>
+      <div class="source-cards">
+        <article class="source-card blue"><b>NASA EONET V3</b><p>Open natural-event intelligence: wildfires, severe storms, volcanoes, ice and other events with geometry/source metadata.</p></article>
+        <article class="source-card coral"><b>NDMA SACHET</b><p>Authoritative public CAP/RSS alerts are displayed as official alerts and never mixed with WeatherGPT's derived score.</p></article>
+        <article class="source-card lime"><b>OPEN-METEO</b><p>Forecast, air quality, model comparison and recent-history inputs power most weather intelligence.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer><span>WEATHERGPT / 100 CAPABILITY ATLAS</span><a href="index.html?build=20260905-v5">OPEN COMMAND CENTER ↗</a></footer>
+  <dialog id="featureDialog"><button class="dialog-close" id="dialogClose">×</button><div id="dialogBody"></div></dialog>
+  <script src="features.js?v=20260905-v5"></script>
+<script>window.addEventListener('weathergpt:auth-ready',e=>{const m=document.getElementById('accountEmailMenu');if(m)m.textContent=e.detail.user.email||'Verified account';});</script></body>
+</html>

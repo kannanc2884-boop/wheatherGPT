@@ -1,0 +1,153 @@
+{
+  "name": "WeatherGPT 100 - Live Flood Guidance",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-flood",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w11-1",
+      "name": "Flood Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        0
+      ],
+      "webhookId": "weathergpt-flood"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json; return [{json:{latitude:Number(b.latitude??8.18),longitude:Number(b.longitude??77.43)}}];"
+      },
+      "id": "w11-2",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://flood-api.open-meteo.com/v1/flood?latitude={{$json.latitude}}&longitude={{$json.longitude}}&daily=river_discharge,river_discharge_mean&forecast_days=7",
+        "options": {}
+      },
+      "id": "w11-3",
+      "name": "Open-Meteo Flood",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const d=$json.daily||{}; const q=(d.river_discharge||[]).filter(Number.isFinite); const ensemble=(d.river_discharge_mean||[]).filter(Number.isFinite); const current=q[0]??null, peak=q.length?Math.max(...q):null, peakMean=ensemble.length?Math.max(...ensemble):null; const ratio=current&&peak!=null?peak/current:null; const level=ratio==null?'UNAVAILABLE':ratio>=2.5?'HIGH':ratio>=1.5?'ELEVATED':'LOW'; return [{json:{currentDischarge:current,peak7DayDischarge:peak,peakEnsembleMean:peakMean,peakToCurrentRatio:ratio,level,series:(d.time||[]).map((t,i)=>({date:t,riverDischarge:d.river_discharge?.[i]??null,ensembleMean:d.river_discharge_mean?.[i]??null})),source:'Open-Meteo Flood API / GloFAS',disclaimer:'Coarse river-discharge guidance; not a street-level flood warning.'}}];"
+      },
+      "id": "w11-4",
+      "name": "Flood Guidance",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w11-5",
+      "name": "Return Flood",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        260,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Flood Request": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Flood",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Flood": {
+      "main": [
+        [
+          {
+            "node": "Flood Guidance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flood Guidance": {
+      "main": [
+        [
+          {
+            "node": "Return Flood",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "weathergpt-11-live-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -1,0 +1,101 @@
+﻿id,name,category,status,implementation,source,workflow
+1,Natural-language weather questions,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+2,Rain questions,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+3,Umbrella recommendations,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+4,Simple weather explanations,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+5,Follow-up questions,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+6,Conversation memory,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+7,Location-aware responses,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+8,Time-aware weather questions,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+9,Compare two locations,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+10,AI-generated daily weather summary,AI Assistant,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+11,Current temperature,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+12,Feels-like temperature,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+13,Minimum / maximum temperature,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+14,Humidity,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+15,Wind speed,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+16,Wind direction,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+17,Atmospheric pressure,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+18,Visibility,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+19,Cloud cover,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+20,UV index,Core Weather,LIVE,frontend+n8n,Open-Meteo,See workflow map
+21,Hourly forecast,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+22,24-hour forecast,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+23,7-day forecast,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+24,Rain probability,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+25,Expected rainfall amount,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+26,Thunderstorm probability / signal,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+27,Temperature trend,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+28,Wind trend,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+29,Sunrise / sunset,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+30,Forecast comparison,Forecasting,LIVE,frontend+n8n,Open-Meteo,See workflow map
+31,Heat risk score,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+32,Rain risk score,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+33,Lightning / thunderstorm risk,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+34,Flood-risk indicator,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+35,Strong-wind risk,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+36,Visibility risk,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+37,Outdoor safety score,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+38,Travel safety score,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+39,Overall weather-risk score,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+40,Explainable risk reasons,Risk Intelligence,LIVE,frontend+n8n,WeatherGPT rules + Open-Meteo,See workflow map
+41,Official alert integration,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+42,District / state warning matching,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+43,Extreme-rain alerts,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+44,Lightning / thunderstorm warnings,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+45,Heat-wave warnings,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+46,Cyclone information scanner,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+47,Flood guidance,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,See workflow map
+48,Disaster response mode,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+49,Emergency recommendations,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+50,Disaster event timeline,Disaster Intelligence,LIVE,frontend+n8n,NDMA SACHET + NASA EONET + WeatherGPT,13_NASA_EONET_Disaster_Intelligence.json
+51,Home location saving,Personalization,LIVE,localStorage+n8n,localStorage + n8n,See workflow map
+52,Favourite locations,Personalization,LIVE,localStorage+n8n,localStorage + n8n,See workflow map
+53,User weather preferences,Personalization,LIVE,localStorage+n8n,localStorage + n8n,See workflow map
+54,Daily weather briefing,Personalization,LIVE,frontend+n8n,localStorage + n8n,See workflow map
+55,Morning forecast brief,Personalization,LIVE,frontend+n8n,localStorage + n8n,See workflow map
+56,Evening forecast brief,Personalization,LIVE,frontend+n8n,localStorage + n8n,See workflow map
+57,Personal rain alert,Personalization,LIVE,localStorage+n8n,localStorage + n8n,See workflow map
+58,Personal heat alert,Personalization,LIVE,localStorage+n8n,localStorage + n8n,See workflow map
+59,Severe-weather browser alert,Personalization,LIVE,localStorage+n8n,localStorage + n8n,See workflow map
+60,Personalized recommendation engine,Personalization,LIVE,localStorage+n8n,localStorage + n8n,See workflow map
+61,Activity Intelligence Engine,Activity Intelligence,LIVE,frontend+n8n deterministic scoring,WeatherGPT scoring rules + Open-Meteo,01 Weather Core + frontend Activity Intelligence
+62,Best outdoor time,Activity Intelligence,LIVE,frontend+n8n,WeatherGPT scoring rules + Open-Meteo,See workflow map
+63,Activity recommendation engine,Activity Intelligence,LIVE,frontend+n8n,WeatherGPT scoring rules + Open-Meteo,See workflow map
+64,Interactive weather map,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+65,Temperature map layer,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+66,Rainfall map layer,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+67,Wind visualization,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+68,Cloud layer,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+69,Warning-region layer,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+70,Current-location marker,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+71,Forecast timeline slider,Maps & Visualization,LIVE,Leaflet/OpenStreetMap+n8n grid,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+72,Animated weather cards,Maps & Visualization,LIVE,frontend+n8n,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+73,Weather charts,Maps & Visualization,LIVE,frontend+n8n,Leaflet + OpenStreetMap + Open-Meteo,See workflow map
+74,Travel mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+75,Agriculture mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+76,Disaster response mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+77,Student / college mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+78,Outdoor sports mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+79,Marine weather mode,Specialized Modes,LIVE,Open-Meteo Marine+n8n,Open-Meteo Marine,See workflow map
+80,Event planner mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+81,Health / comfort mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+82,Smart city mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+83,Research mode,Specialized Modes,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+84,Multilingual assistant,Advanced,LIVE,frontend+n8n,n8n + Gemini + grounded weather data,See workflow map
+85,Voice questions,Advanced,LIVE,Browser Web Speech API,Browser Web Speech API,See workflow map
+86,Voice weather briefing,Advanced,LIVE,Browser Web Speech API,Browser Web Speech API,See workflow map
+87,Weather-source citations,Advanced,LIVE,frontend+n8n,frontend+n8n,See workflow map
+88,Multi-model forecast verification,Advanced,LIVE,ECMWF+GFS+ICON via Open-Meteo+n8n,Open-Meteo multi-model,See workflow map
+89,Forecast confidence score,Advanced,LIVE,ECMWF+GFS+ICON via Open-Meteo+n8n,Open-Meteo multi-model,See workflow map
+90,Citizen weather reporting,Advanced,LIVE,localStorage+n8n,localStorage+n8n,See workflow map
+91,Weather anomaly detection,Advanced,LIVE,Open-Meteo Forecast past_days+n8n,Open-Meteo past_days,See workflow map
+92,Recent-history analytics,Advanced,LIVE,Open-Meteo Forecast past_days+n8n,Open-Meteo past_days,See workflow map
+93,Experimental local nowcast model,Advanced,EXPERIMENTAL,n8n local trend/persistence model,n8n experimental local model,See workflow map
+94,Weather Route Intelligence,Decision Intelligence,LIVE,frontend+n8n+Open-Meteo+Leaflet,Open-Meteo + WeatherGPT route scoring + Leaflet,14 WeatherGPT Decision Studio
+95,Campus Weather Mode,Decision Intelligence,LIVE,frontend+n8n,Open-Meteo + WeatherGPT campus rules,14 WeatherGPT Decision Studio
+96,Event Weather Planner,Decision Intelligence,LIVE,frontend+n8n,Open-Meteo hourly forecast + WeatherGPT event scoring,14 WeatherGPT Decision Studio
+97,AI Trip Weather Planner,Decision Intelligence,LIVE,frontend+n8n+Gemini,Open-Meteo + n8n + Gemini grounded planning,01 Weather Core + 02 Gemini Copilot + 14 Decision Studio
+98,Weather Scenario Simulator,Decision Intelligence,LIVE,frontend+n8n,WeatherGPT deterministic risk rules,14 WeatherGPT Decision Studio
+99,Heat Stress Intelligence,Decision Intelligence,LIVE,frontend+n8n,Open-Meteo + WeatherGPT heat-burden rules,14 WeatherGPT Decision Studio
+100,Indian Languages Mode,Accessibility & Language,LIVE,frontend+n8n+Gemini+browser speech,Gemini grounded copilot + browser speech APIs,02 WeatherGPT AI Chat Gemini

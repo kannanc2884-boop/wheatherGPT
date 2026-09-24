@@ -1,0 +1,16 @@
+{
+  "name": "WeatherGPT - AI Weather Intelligence",
+  "short_name": "WeatherGPT",
+  "start_url": "./login.html",
+  "display": "standalone",
+  "background_color": "#f6efe6",
+  "theme_color": "#f6efe6",
+  "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "description": "WeatherGPT AI weather and disaster intelligence with verified email sign-in."
+}

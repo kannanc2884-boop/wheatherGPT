@@ -1,0 +1,27 @@
+WEATHERGPT v5 QUICK START — 100 CAPABILITIES + VERIFIED EMAIL LOGIN
+
+FIRST-TIME SETUP
+1. Configure Firebase using docs\FIREBASE_AUTH_SETUP_GUIDE.md
+2. Paste Firebase Web App config into frontend\firebase-config.js
+3. Enable Firebase Authentication > Email/Password
+4. Add localhost under Firebase Authentication > Settings > Authorized domains
+5. Install n8n: npm install -g n8n
+6. Import all 14 JSON files from n8n\workflows\ and publish/activate them
+
+EACH DEMO SESSION
+1. Run scripts\start_backend_easy_windows.bat
+2. Keep n8n terminal open; editor = http://localhost:5678
+3. Run scripts\test_backend_easy_windows.bat
+4. Run scripts\start_frontend_windows.bat
+5. Open http://localhost:8080/login.html
+6. Sign in with a VERIFIED Firebase email account
+7. App n8n base = http://localhost:5678
+
+GEMINI
+- Enter the Gemini Developer API key only in the backend launcher prompt.
+- Never paste it into frontend files.
+
+CAPABILITY COUNT
+- Exactly 100.
+- Activity Intelligence is capability 61 with 8 profiles inside it.
+- Route/Campus/Event/Trip/Scenario/Heat/Languages are capabilities 94-100.

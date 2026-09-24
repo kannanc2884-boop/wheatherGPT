@@ -1,0 +1,152 @@
+{
+  "name": "WeatherGPT 100 - Live Experimental Local Nowcast",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-nowcast",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w12-1",
+      "name": "Nowcast Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        0
+      ],
+      "webhookId": "weathergpt-nowcast"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json; return [{json:{latitude:Number(b.latitude??8.18),longitude:Number(b.longitude??77.43)}}];"
+      },
+      "id": "w12-2",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude={{$json.latitude}}&longitude={{$json.longitude}}&past_hours=3&forecast_hours=3&hourly=temperature_2m,precipitation,precipitation_probability&timezone=auto",
+        "options": {}
+      },
+      "id": "w12-3",
+      "name": "Open-Meteo Short Horizon",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const h=$json.hourly||{}; const rain=(h.precipitation||[]).map(Number).filter(Number.isFinite); const prob=(h.precipitation_probability||[]).map(Number).filter(Number.isFinite); const temp=(h.temperature_2m||[]).map(Number).filter(Number.isFinite); const past=rain.slice(0,3),future=rain.slice(-3); const persistence=past.length?past.reduce((a,c)=>a+c,0)/past.length:0; const futureRain=future.length?future.reduce((a,c)=>a+c,0):0; const futureProb=prob.length?Math.max(...prob.slice(-3)):0; const trend=temp.length>=2?temp.at(-1)-temp[0]:0; const summary=(persistence>=.5||futureProb>=60)?'Recent precipitation / forecast probability suggests continued short-term wet conditions.':'No strong short-term precipitation persistence signal.'; return [{json:{experimental:true,horizon:'0-3 hours',precipitationPersistence:persistence,forecastPrecipitation3h:futureRain,peakRainProbability3h:futureProb,temperatureTrend:trend,summary,source:'Open-Meteo short-horizon data + WeatherGPT heuristic',warning:'Experimental heuristic - not an official forecast or trained meteorological model.'}}];"
+      },
+      "id": "w12-4",
+      "name": "Experimental Nowcast",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w12-5",
+      "name": "Return Nowcast",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        260,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Nowcast Request": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Short Horizon",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Short Horizon": {
+      "main": [
+        [
+          {
+            "node": "Experimental Nowcast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Experimental Nowcast": {
+      "main": [
+        [
+          {
+            "node": "Return Nowcast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "weathergpt-12-live-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

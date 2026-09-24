@@ -1,0 +1,153 @@
+{
+  "name": "WeatherGPT 100 - Live Marine Weather Mode",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-marine",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "w10-1",
+      "name": "Marine Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        0
+      ],
+      "webhookId": "weathergpt-marine"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json; return [{json:{latitude:Number(b.latitude??8.18),longitude:Number(b.longitude??77.43),location:b.location||''}}];"
+      },
+      "id": "w10-2",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://marine-api.open-meteo.com/v1/marine?latitude={{$json.latitude}}&longitude={{$json.longitude}}&current=wave_height,wave_period,sea_surface_temperature,ocean_current_velocity&timezone=auto",
+        "options": {}
+      },
+      "id": "w10-3",
+      "name": "Open-Meteo Marine",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input=$('Normalize Input').first().json; const c=$json.current||{}; const wave=Number(c.wave_height); const risk=!Number.isFinite(wave)?'UNAVAILABLE':wave>2.5?'HIGH':wave>1.2?'MODERATE':'LOW'; return [{json:{location:input.location,latitude:input.latitude,longitude:input.longitude,waveHeight:Number.isFinite(wave)?wave:null,wavePeriod:c.wave_period??null,seaSurfaceTemperature:c.sea_surface_temperature??null,currentVelocity:c.ocean_current_velocity??null,risk,source:'Open-Meteo Marine API',disclaimer:'Prototype guidance only. Not for marine navigation.'}}];"
+      },
+      "id": "w10-4",
+      "name": "Marine Intelligence",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "w10-5",
+      "name": "Return Marine",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        260,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Marine Request": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Open-Meteo Marine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open-Meteo Marine": {
+      "main": [
+        [
+          {
+            "node": "Marine Intelligence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marine Intelligence": {
+      "main": [
+        [
+          {
+            "node": "Return Marine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "weathergpt-10-live-v2",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

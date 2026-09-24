@@ -1,0 +1,170 @@
+{
+  "name": "WeatherGPT - Grounded Gemini Copilot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weathergpt-chat",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "c-webhook",
+      "name": "Chat Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -650,
+        0
+      ],
+      "webhookId": "weathergpt-chat"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$json.body||$json;\nconst mode=b.mode||'General',language=b.language||'English';\nconst modeGuide={General:'Give balanced practical advice.',Travel:'Prioritize rain, visibility, wind and safe travel timing.',Sports:'Prioritize rain, heat, UV, wind and outdoor play suitability.',Agriculture:'Prioritize rainfall, heat, humidity, wind and simple farm implications without pretending to be an agronomist.',Disaster:'Prioritize official alerts, severe conditions, source attribution and simple precautions. Never amplify uncertainty.',Student:'Prioritize commute, umbrella, heat exposure and college/outdoor timing.'}[mode]||'';\nconst system=`You are WeatherGPT, a grounded weather decision copilot for a college prototype. Answer in ${language}. ${modeGuide} Use ONLY the supplied live weather JSON, derived risk JSON and official alert JSON for factual claims. Never invent measurements, warnings, government instructions, locations or certainty. Always distinguish WeatherGPT-derived risk from official alerts. If officialAlerts is empty, say no location-matched alert was returned by the connected official feed; do not claim that no alert exists anywhere. Keep the response concise and actionable. Do not provide medical diagnoses. Location: ${b.location||'Unknown'}.`;\nconst user=`USER QUESTION:\\n${b.question||''}\\n\\nLIVE WEATHER JSON:\\n${JSON.stringify(b.weather||{})}\\n\\nDERIVED RISK JSON:\\n${JSON.stringify(b.risk||{})}\\n\\nOFFICIAL SACHET ALERT MATCHES:\\n${JSON.stringify(b.officialAlerts||[])}`;\nreturn [{json:{system,user,model:$env.GEMINI_MODEL||'gemini-3.7-flash'}}];"
+      },
+      "id": "c-prompt",
+      "name": "Grounded Weather Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/interactions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-goog-api-key",
+              "value": "={{ $env.GEMINI_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\"model\":{{ JSON.stringify($json.model) }},\"system_instruction\":{{ JSON.stringify($json.system) }},\"input\":{{ JSON.stringify($json.user) }},\"store\":false}",
+        "options": {}
+      },
+      "id": "c-gemini",
+      "name": "Gemini Free-Tier API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -170,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const answer=($json.steps||[]).filter(s=>s.type==='model_output').flatMap(s=>s.content||[]).filter(c=>c.type==='text').map(c=>c.text||'').join('\\n').trim() || 'No AI answer was returned.'; return [{json:{answer,model:$('Grounded Weather Prompt').first().json.model,grounded:true,interactionId:$json.id||null}}];"
+      },
+      "id": "c-extract",
+      "name": "Extract Grounded Answer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "c-response",
+      "name": "Return AI Answer",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        330,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Request": {
+      "main": [
+        [
+          {
+            "node": "Grounded Weather Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grounded Weather Prompt": {
+      "main": [
+        [
+          {
+            "node": "Gemini Free-Tier API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Free-Tier API": {
+      "main": [
+        [
+          {
+            "node": "Extract Grounded Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Grounded Answer": {
+      "main": [
+        [
+          {
+            "node": "Return AI Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7f606dd0-57f3-49ea-8415-76fbf88b9102",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

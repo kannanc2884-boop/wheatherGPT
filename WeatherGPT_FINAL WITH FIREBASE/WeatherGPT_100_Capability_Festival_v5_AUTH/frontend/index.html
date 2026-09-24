@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" class="auth-checking">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f4efe4" />
+  <meta name="description" content="WeatherGPT — AI weather and disaster intelligence orchestrated with n8n." />
+  <title>WeatherGPT — Weather, but intelligent.</title>
+  <script>
+    // v4 cache migration: remove service workers/caches from older dark builds.
+    (async()=>{try{if('serviceWorker' in navigator){for(const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();}if('caches' in window){for(const k of await caches.keys()) await caches.delete(k);}}catch(e){}})();
+  </script>
+  <link rel="manifest" href="manifest.json?v=20260905-v5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="style.css?v=20260905-v5" />
+  <link rel="stylesheet" href="auth.css?v=20260905-v5" />
+  <script>window.__WG_AUTH_REQUIRED__=true;</script>
+  <script src="firebase-config.js?v=20260905-v5"></script>
+  <script>(function(){const c=window.WEATHERGPT_FIREBASE_CONFIG||{};if(!c.apiKey||String(c.apiKey).startsWith('PASTE_')){const next=location.pathname.split('/').pop()+location.search;location.replace('login.html?reason=firebase-config&next='+encodeURIComponent(next));}})();</script>
+  <script type="module" src="auth-guard.js?v=20260905-v5"></script>
+</head>
+<body>
+  <div class="intro-splash" id="introSplash" aria-hidden="true">
+    <div class="splash-mark"><span>W</span><i></i></div>
+    <p>WEATHER / INTELLIGENCE / ACTION</p>
+  </div>
+  <div class="grain"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="ambient-shape shape-a"></div><div class="ambient-shape shape-b"></div><div class="ambient-shape shape-c"></div>
+
+  <header class="festival-nav">
+    <a class="wordmark" href="index.html?build=20260905-v5" data-home="true"><span class="wordmark-disc">W<i></i></span><div><b>WeatherGPT</b><small>WEATHER INTELLIGENCE FESTIVAL</small></div></a>
+    <nav class="nav-center" aria-label="Primary navigation">
+      <button class="nav active" data-section="dashboard">HOME</button>
+      <button class="nav" data-section="assistant">COPILOT</button>
+      <button class="nav" data-section="planner">PLANNER</button>
+      <button class="nav nav-new" data-section="intelligence">INTEL+</button>
+      <button class="nav" data-section="alerts">DISASTERS</button>
+      <button class="nav" data-section="mapSection">MAP</button>
+      <button class="nav" data-section="lab">LAB</button>
+      <button class="nav" data-section="about">SYSTEM</button>
+    </nav>
+    <div class="nav-actions">
+      <a class="feature-page-link" href="features.html?build=20260905-v5"><span>100</span> FEATURES ↗</a>
+      <button id="settingsBtn" class="round-action" title="Settings">⚙</button><div class="account-shell"><button class="account-button" type="button" data-account-toggle><span class="account-avatar" id="accountInitial">W</span><span id="accountEmail">VERIFIED USER</span></button><div class="account-menu" id="accountMenu"><small><span class="verified-mark">● VERIFIED</span> WEATHERGPT ACCOUNT</small><b id="accountEmailMenu">Signed in with Firebase</b><button type="button" data-auth-logout>SIGN OUT</button></div></div>
+    </div>
+  </header>
+
+  <div class="utility-bar">
+    <div class="connection-chip"><i id="n8nDot" class="system-dot"></i><span><b id="n8nState">Checking n8n</b><small id="n8nDetail">localhost:5678</small></span></div>
+    <div class="page-chip"><span>LIVE VIEW</span><b id="pageTitle">Command Center</b></div>
+    <form id="searchForm" class="location-search"><span>⌕</span><input id="locationInput" value="Nagercoil" autocomplete="off" aria-label="Search location"/><button>EXPLORE ↗</button></form>
+    <button id="refreshBtn" class="refresh-pill" title="Refresh">REFRESH ↻</button>
+  </div>
+
+  <main>
+    <section id="dashboard" class="section active-section">
+      <div class="festival-hero">
+        <div class="hero-kicker reveal"><span>AI WEATHER + DISASTER COPILOT</span><i></i><span>ZERO-COST PROTOTYPE</span></div>
+        <div class="hero-title-wrap reveal">
+          <h1>Weather,<br><em>but intelligent.</em></h1>
+          <p id="heroBrief" class="hero-lead">Building a live decision brief from forecast data.</p>
+        </div>
+        <div class="weather-stage reveal">
+          <div class="stage-orbit orbit-one"></div><div class="stage-orbit orbit-two"></div>
+          <div class="weather-disc"><div id="weatherIcon" class="weather-glyph">☁</div><strong id="temperature">--°</strong><small id="condition">Connecting...</small></div>
+          <div class="float-tag tag-location"><small>YOU ARE VIEWING</small><b id="locationLabel">NAGERCOIL, INDIA</b></div>
+          <div class="float-tag tag-feels"><small>FEELS LIKE</small><b id="feelsLike">--°</b></div>
+          <div class="float-tag tag-high"><small>HIGH / LOW</small><b><span id="maxTemp">--°</span> / <span id="minTemp">--°</span></b></div>
+          <div class="float-tag tag-live"><small>STATUS</small><b id="liveStamp">LIVE</b></div>
+          <div class="float-tag tag-source"><small>DATA PATH</small><b id="dataSource">n8n</b></div>
+        </div>
+        <div class="hero-actions reveal"><button class="hero-jump" data-jump="assistant">ASK WEATHERGPT <span>↗</span></button><a href="features.html?build=20260905-v5">EXPLORE ALL 100 FEATURES <span>↗</span></a></div>
+        <div class="hero-outline-word" aria-hidden="true">INTELLIGENCE</div>
+      </div>
+
+      <div class="kinetic-strip strip-dark" aria-hidden="true"><div><span>FORECAST</span><i>✦</i><span>RISK</span><i>✦</i><span>NASA EONET</span><i>✦</i><span>n8n</span><i>✦</i><span>GEMINI</span><i>✦</i><span>SACHET</span><i>✦</i><span>FORECAST</span><i>✦</i><span>RISK</span><i>✦</i><span>NASA EONET</span><i>✦</i><span>n8n</span><i>✦</i><span>GEMINI</span><i>✦</i><span>SACHET</span><i>✦</i></div></div>
+
+      <div class="glance-block">
+        <div class="section-display reveal"><span>01 / LIVE CONDITIONS</span><h2>Weather<br><em>at a glance.</em></h2><p>Raw forecast becomes a visual decision surface: atmosphere, precipitation, visibility, UV and air quality in one view.</p></div>
+        <div class="bento-signals reveal">
+          <article class="bento bento-blue"><span>HUMIDITY</span><strong id="humidity">--%</strong><small id="humidityHint">relative humidity</small><div class="bento-icon">≈</div></article>
+          <article class="bento bento-coral"><span>RAIN / 12H</span><strong id="rain">--%</strong><small id="rainHint">peak probability</small><div class="bento-icon">☂</div></article>
+          <article class="bento bento-lime"><span>WIND</span><strong id="wind">--</strong><small>km/h current</small><div class="bento-icon">↝</div></article>
+          <article class="bento bento-yellow"><span>UV INDEX</span><strong id="uv">--</strong><small id="uvLabel">exposure</small><div class="bento-icon">☀</div></article>
+          <article class="bento bento-sky"><span>VISIBILITY</span><strong id="visibility">--</strong><small>km current</small><div class="bento-icon">◎</div></article>
+          <article class="bento bento-pink"><span>AIR QUALITY</span><strong id="aqi">--</strong><small id="aqiLabel">European AQI</small><div class="bento-icon">◌</div></article>
+        </div>
+      </div>
+
+      <div class="risk-story">
+        <article class="risk-poster reveal">
+          <div class="poster-label"><span>WEATHERGPT RISK</span><em id="riskLevel">CALCULATING</em></div>
+          <div class="risk-ring" id="riskRing"><div><strong id="riskScore">--</strong><span>/100</span></div></div>
+          <div id="riskReasons" class="risk-reasons"></div>
+          <p>Derived WeatherGPT intelligence — not an official government warning.</p>
+        </article>
+        <article class="decision-poster reveal">
+          <span class="poster-index">ACTION / 02</span><h3>Forecast translated<br>into <em>decisions.</em></h3><p id="briefText">Loading live forecast and computing recommendations...</p>
+          <div class="decision-chips"><span id="umbrellaChip">☂ Rain check</span><span id="outdoorChip">◎ Outdoor check</span><span id="travelChip">↗ Travel check</span></div>
+        </article>
+        <article class="window-poster reveal"><span class="poster-index">BEST WINDOW / 24H</span><div id="bestWindow" class="window-time">--</div><p id="bestWindowWhy">Scanning hourly conditions for the lowest-risk 3-hour window.</p><div class="confidence"><span>DATA COMPLETENESS</span><div><i id="confidenceBar"></i></div><b id="confidenceScore">--%</b></div></article>
+      </div>
+
+      <div class="charts-story">
+        <div class="section-display compact reveal"><span>03 / FORECAST RHYTHM</span><h2>See what<br><em>comes next.</em></h2></div>
+        <article class="chart-card chart-blue reveal"><div class="chart-head"><span>NEXT 24 HOURS</span><b>TEMPERATURE / °C</b></div><canvas id="tempChart"></canvas></article>
+        <article class="chart-card chart-orange reveal"><div class="chart-head"><span>PRECIPITATION</span><b>RAIN PROBABILITY / %</b></div><canvas id="rainChart"></canvas></article>
+      </div>
+      <article class="forecast-stage reveal"><div class="forecast-title"><span>04 / THE WEEK AHEAD</span><h3>Seven-day outlook</h3></div><div id="dailyForecast" class="forecast-row"></div></article>
+    </section>
+
+    <section id="assistant" class="section section-page section-purple">
+      <div class="page-hero reveal"><span>02 / WEATHERGPT COPILOT</span><h2>Ask the forecast<br><em>like a person.</em></h2><p>Gemini is grounded with live weather, derived risk and official-alert context supplied through n8n.</p></div>
+      <div class="copilot-layout">
+        <article class="chat-stage reveal"><div class="chat-head"><div><span class="ai-spark">✦</span><div><b>WeatherGPT</b><small id="chatBackend">n8n grounded copilot</small></div></div><button id="clearChat">CLEAR CHAT</button></div><div id="chatMessages" class="messages"><div class="msg ai"><b>WeatherGPT</b><p>Ask: “Should I carry an umbrella?”, “When should I travel?”, “Is it safe to play outside?”, or “Explain the official alert near me.”</p></div></div><form id="chatForm" class="chat-input"><button type="button" id="voiceBtn" title="Voice input">🎙</button><input id="chatInput" placeholder="Ask WeatherGPT anything about the weather..." autocomplete="off"/><button>ASK ✦</button></form></article>
+        <aside class="copilot-side reveal"><article class="mode-card"><span>BEHAVIOUR MODE</span><select id="modeSelect"><option>General</option><option>Travel</option><option>Sports</option><option>Agriculture</option><option>Disaster</option><option>Student</option></select><select id="languageSelect" aria-label="Copilot language"><option value="English">English</option><option value="Hindi">हिन्दी / Hindi</option><option value="Tamil">தமிழ் / Tamil</option><option value="Telugu">తెలుగు / Telugu</option><option value="Malayalam">മലയാളം / Malayalam</option><option value="Kannada">ಕನ್ನಡ / Kannada</option><option value="Bengali">বাংলা / Bengali</option><option value="Marathi">मराठी / Marathi</option><option value="Gujarati">ગુજરાતી / Gujarati</option><option value="Punjabi">ਪੰਜਾਬੀ / Punjabi</option><option value="Odia">ଓଡ଼ିଆ / Odia</option><option value="Assamese">অসমীয়া / Assamese</option><option value="Urdu">اردو / Urdu</option></select></article><article class="quick-card"><span>QUICK PROMPTS</span><button class="quick">Should I carry an umbrella?</button><button class="quick">What is the best time to go outside?</button><button class="quick">Is travel safe this evening?</button><button class="quick">Can I play cricket today?</button><button class="quick">Explain today's weather simply.</button></article><article class="voice-card"><span>VOICE OUTPUT</span><label class="toggle"><input id="speakToggle" type="checkbox"><i></i><b>Speak AI answers</b></label><p>Browser speech only. No paid speech API.</p></article></aside>
+      </div>
+    </section>
+
+    <section id="planner" class="section section-page section-lime">
+      <div class="page-hero reveal"><span>03 / SMART PLANNER</span><h2>Plan around<br><em>the weather.</em></h2><p>One major Activity Intelligence Engine contains eight activity profiles, plus a best-time finder and city comparison — deterministic, fast and explainable.</p></div>
+      <article class="activity-module-banner reveal"><div><span>ONE FEATURE / EIGHT ACTIVITY PROFILES</span><h3>Activity Intelligence Engine</h3><p>Running, walking, cycling, cricket, football, photography, laundry and outdoor-event scores are all profiles inside this single explainable Activity Intelligence feature.</p></div><b>8 PROFILES<br>1 FEATURE</b></article>
+      <div id="activityGrid" class="activity-grid reveal"></div>
+      <div class="planner-split"><article class="compare-card reveal"><span>CITY COMPARE / LIVE</span><h3>Which place wins<br>right now?</h3><form id="compareForm"><input id="compareInput" placeholder="e.g. Chennai"/><button>COMPARE ↗</button></form><div id="compareResult" class="compare-result"><p>Enter another city to compare temperature, rain and risk.</p></div></article><article class="day-card reveal"><span>YOUR NEXT 6 HOURS</span><h3>Micro day plan</h3><div id="dayPlan" class="day-plan"></div></article></div>
+    </section>
+
+    <section id="intelligence" class="section section-page section-intelligence">
+      <div class="page-hero reveal"><span>NEW / DECISION INTELLIGENCE</span><h2>Seven planning tools.<br><em>Real decision value.</em></h2><p>The final capability set includes route, campus, events, AI trip planning, scenario simulation, heat-stress intelligence and Indian-language assistance.</p></div>
+      <div class="decision-studio-banner reveal"><div><span>WORKFLOW 14 / DECISION STUDIO</span><h3>Weather data becomes<br>context-aware decisions.</h3></div><div class="studio-badges"><b>DECISION STUDIO</b><span>100 TOTAL CAPABILITIES</span><span>Activity profiles merged into one feature</span></div></div>
+      <div class="intelligence-grid">
+        <article class="intel-card route-card reveal"><div class="intel-head"><span>94 / WEATHER ROUTE INTELLIGENCE</span><b>LIVE CORRIDOR</b></div><h3>See weather between two places.</h3><form id="routeForm" class="intel-form two"><input id="routeOrigin" placeholder="Origin e.g. Nagercoil"/><input id="routeDestination" placeholder="Destination e.g. Thiruvananthapuram"/><button>ANALYZE ROUTE ↗</button></form><div id="routeMap" class="route-mini-map"></div><div id="routeResult" class="intel-output">Enter an origin and destination. WeatherGPT samples the corridor; it does not provide turn-by-turn navigation.</div></article>
+        <article class="intel-card campus-card reveal"><div class="intel-head"><span>95 / CAMPUS WEATHER MODE</span><b>STUDENT DAY</b></div><h3>Turn the forecast into a campus timeline.</h3><div class="intel-form"><input id="campusName" placeholder="Campus name (optional)"/><button id="campusRun">BUILD CAMPUS BRIEF ↗</button></div><div id="campusResult" class="intel-output">Uses the currently searched location and the next available campus-day windows.</div></article>
+        <article class="intel-card event-card reveal"><div class="intel-head"><span>96 / EVENT WEATHER PLANNER</span><b>7-DAY WINDOW</b></div><h3>Should the event stay outdoors?</h3><form id="eventForm" class="intel-form event-fields"><input id="eventName" placeholder="Event name"/><input id="eventDate" type="date"/><input id="eventTime" type="time" value="16:00"/><select id="eventDuration"><option value="1">1 hour</option><option value="2" selected>2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option><option value="6">6 hours</option></select><button>PLAN EVENT ↗</button></form><div id="eventResult" class="intel-output">Choose a date inside the loaded seven-day forecast.</div></article>
+        <article class="intel-card trip-card reveal"><div class="intel-head"><span>97 / AI TRIP WEATHER PLANNER</span><b>GEMINI-READY</b></div><h3>Compare several trip stops.</h3><form id="tripForm" class="intel-form"><input id="tripStops" placeholder="Stops separated by commas: Madurai, Kochi, Bengaluru"/><input id="tripDate" type="date"/><button>BUILD AI TRIP PLAN ↗</button></form><div id="tripResult" class="intel-output">WeatherGPT compares live forecast data first; Gemini is used only to explain the grounded trip result when workflow 02 is active.</div></article>
+        <article class="intel-card scenario-card reveal"><div class="intel-head"><span>98 / WEATHER SCENARIO SIMULATOR</span><b>NOT A FORECAST</b></div><h3>What if conditions become worse?</h3><div class="scenario-controls"><label>Temperature °C<input id="scenarioTemp" type="number" step="1"/></label><label>Rain probability %<input id="scenarioRain" type="number" min="0" max="100" step="5"/></label><label>Wind gust km/h<input id="scenarioWind" type="number" min="0" step="5"/></label><label>UV index<input id="scenarioUv" type="number" min="0" max="20" step="1"/></label><label class="scenario-check"><input id="scenarioThunder" type="checkbox"/> Thunderstorm signal</label><button id="scenarioRun">RUN SIMULATION ↗</button></div><div id="scenarioResult" class="intel-output">Values will initialize from the current weather after it loads.</div></article>
+        <article class="intel-card heat-card reveal"><div class="intel-head"><span>99 / HEAT STRESS INTELLIGENCE</span><b>OUTDOOR COMFORT</b></div><h3>Understand heat burden, not just temperature.</h3><button id="heatRun" class="intel-primary">ANALYZE HEAT STRESS ↗</button><div id="heatResult" class="intel-output">Combines apparent temperature, humidity, UV and wind. General weather guidance only; not a medical diagnosis.</div></article>
+        <article class="intel-card language-card reveal"><div class="intel-head"><span>100 / INDIAN LANGUAGES MODE</span><b>GEMINI + VOICE</b></div><h3>WeatherGPT in your language.</h3><div class="intel-form"><select id="indiaLanguage"><option value="Hindi">हिन्दी / Hindi</option><option value="Tamil">தமிழ் / Tamil</option><option value="Telugu">తెలుగు / Telugu</option><option value="Malayalam">മലയാളം / Malayalam</option><option value="Kannada">ಕನ್ನಡ / Kannada</option><option value="Bengali">বাংলা / Bengali</option><option value="Marathi">मराठी / Marathi</option><option value="Gujarati">ગુજરાતી / Gujarati</option><option value="Punjabi">ਪੰਜਾਬੀ / Punjabi</option><option value="Odia">ଓଡ଼ିଆ / Odia</option><option value="Assamese">অসমীয়া / Assamese</option><option value="Urdu">اردو / Urdu</option><option value="English">English</option></select><button id="languageApply">USE IN COPILOT</button><button id="languageBrief">GENERATE LOCAL-LANGUAGE BRIEF ↗</button></div><div id="languageResult" class="intel-output">This changes the grounded Gemini answer language and browser voice language where supported.</div></article>
+      </div>
+      <p class="studio-disclaimer reveal">Decision Studio outputs are derived WeatherGPT guidance. Official disaster warnings remain in the NDMA SACHET section, and simulations are never presented as forecasts.</p>
+    </section>
+
+    <section id="alerts" class="section section-page section-coral">
+      <div class="page-hero reveal"><span>04 / DISASTER INTELLIGENCE</span><h2>Know what is<br><em>actually happening.</em></h2><p>Official Indian CAP alerts, NASA EONET open natural events, and WeatherGPT-derived risk stay visibly separated.</p></div>
+      <div class="alert-sources reveal"><article class="official-alerts"><div class="source-badge badge-official">OFFICIAL / NDMA SACHET <em id="alertRefresh">LOADING</em></div><div id="officialAlerts"><div class="alert-empty">Loading location-matched official alerts through n8n...</div></div></article><article class="derived-alert"><div class="source-badge badge-derived">DERIVED / WEATHERGPT</div><div id="derivedAlertCard"><h3 id="derivedAlertTitle">Calculating...</h3><p id="derivedAlertText">Risk logic is evaluating forecast signals.</p></div><button id="notifyBtn" class="outline-btn">ENABLE BROWSER ALERTS</button></article></div>
+      <article class="source-integrity reveal"><b>SOURCE INTEGRITY</b><p>WeatherGPT never converts its own risk score into an “IMD warning”. Official warnings remain official; derived intelligence remains derived.</p></article>
+      <article class="nasa-stage reveal"><div class="nasa-copy"><span>NASA / EONET V3 <em id="eonetBadge">LOADING</em></span><h3>Natural events<br><i>within 500 km.</i></h3><p>Open wildfires, severe storms, volcanic activity, ice events and other events are filtered by geographic distance. The scan map remains visible even when no nearby event is found.</p><div class="nasa-orbit">500<small>KM</small></div></div><div class="nasa-intel-pane"><div class="eonet-map-shell"><div id="eonetMap" aria-label="NASA EONET 500 kilometre scan map"></div><div class="eonet-map-label"><b>500 KM SCAN</b><span id="eonetMapStatus">SEARCH AREA</span></div></div><div id="eonetEvents" class="eonet-events"><div class="alert-empty">Loading NASA EONET v3 events through n8n...</div></div></div><p class="attribution">NASA EONET complements — but does not replace — official local emergency warnings. Map © OpenStreetMap contributors.</p></article>
+    </section>
+
+    <section id="mapSection" class="section section-page section-sky">
+      <div class="page-hero reveal"><span>05 / WEATHER MAP</span><h2>Put intelligence<br><em>on the map.</em></h2><p>Free Leaflet + OpenStreetMap maps show your weather location and nearby NASA EONET point events.</p></div>
+      <article class="map-stage reveal"><div id="map"></div><div class="map-ticket"><span id="mapPlace">LOCATION</span><strong id="mapTemp">--°</strong><small id="mapCondition">Weather</small></div></article><p class="attribution map-credit">Map © OpenStreetMap contributors. Weather & AQI attribution applies.</p>
+    </section>
+
+    <section id="lab" class="section section-page section-lab">
+      <div class="page-hero reveal"><span>06 / ADVANCED n8n LAB</span><h2>Use the backend<br><em>you already activated.</em></h2><p>This page exposes workflows 06–12 directly: citizen reports, live map grid, recent-history analytics, multi-model agreement, marine intelligence, flood guidance and experimental nowcast.</p></div>
+      <div class="lab-banner reveal"><div><span>BACKEND ACCESS</span><h3>Seven advanced processors,<br>now visible in the UI.</h3></div><button id="labRunAll">RUN MODULE CHECK ↗</button><div id="labHealth" class="lab-health">Ready to test localhost n8n.</div></div>
+      <div class="lab-grid">
+        <article class="lab-card lab-citizen reveal"><div class="lab-card-head"><span>06 / CITIZEN REPORTS</span><b>COMMUNITY / UNVERIFIED</b></div><h3>Report local conditions.</h3><form id="citizenForm" class="lab-form"><select id="citizenType"><option>Heavy rain</option><option>Flooding</option><option>Strong wind</option><option>Lightning</option><option>Road blockage</option><option>Weather observation</option></select><select id="citizenSeverity"><option value="info">Info</option><option value="moderate">Moderate</option><option value="high">High</option></select><input id="citizenNote" maxlength="300" placeholder="Optional observation note"/><button>SUBMIT REPORT ↗</button></form><button id="citizenRefresh" class="lab-secondary">REFRESH COMMUNITY FEED</button><div id="citizenReports" class="lab-output">No reports loaded yet.</div></article>
+        <article class="lab-card lab-grid-card reveal"><div class="lab-card-head"><span>07 / MAP GRID</span><b>OPEN-METEO / LIVE</b></div><h3>3 × 3 local weather field.</h3><p>Generates nine surrounding coordinates and enriches them with live Open-Meteo temperature, precipitation, wind and cloud values.</p><button id="gridRunBtn" class="lab-primary">GENERATE GRID ↗</button><div id="gridResult" class="lab-output">Run this module to add a live grid layer to the Map page.</div></article>
+        <article class="lab-card lab-history reveal"><div class="lab-card-head"><span>08 / RECENT HISTORY</span><b>30 DAYS</b></div><h3>Trend + anomaly check.</h3><p>Uses Open-Meteo recent past-days data and compares the latest daily mean temperature against the recent window.</p><button id="historyRunBtn" class="lab-primary">ANALYZE RECENT HISTORY ↗</button><div id="historyResult" class="lab-output">Waiting for analysis.</div></article>
+        <article class="lab-card lab-consensus reveal"><div class="lab-card-head"><span>09 / MODEL CONSENSUS</span><b>ECMWF / GFS / ICON</b></div><h3>Forecast agreement.</h3><p>Compares three Open-Meteo model selections and returns temperature/rain spread plus an explainable confidence label.</p><button id="consensusRunBtn" class="lab-primary">COMPARE MODELS ↗</button><div id="consensusResult" class="lab-output">Waiting for three-model verification.</div></article>
+        <article class="lab-card lab-marine reveal"><div class="lab-card-head"><span>10 / MARINE MODE</span><b>OPEN-METEO MARINE</b></div><h3>Sea-state intelligence.</h3><p>Live wave height, wave period, sea-surface temperature and ocean-current velocity. Prototype guidance only.</p><button id="marineRunBtn" class="lab-primary">LOAD MARINE DATA ↗</button><div id="marineResult" class="lab-output">Best for coastal locations.</div></article>
+        <article class="lab-card lab-flood reveal"><div class="lab-card-head"><span>11 / FLOOD GUIDANCE</span><b>GLOFAS / COARSE</b></div><h3>River-discharge signal.</h3><p>Uses Open-Meteo Flood / GloFAS data. This is coarse river guidance, not a street-level flood warning.</p><button id="floodRunBtn" class="lab-primary">CHECK FLOOD SIGNAL ↗</button><div id="floodResult" class="lab-output">Waiting for discharge forecast.</div></article>
+        <article class="lab-card lab-nowcast reveal"><div class="lab-card-head"><span>12 / EXPERIMENTAL NOWCAST</span><b>0–3 H / EXPERIMENTAL</b></div><h3>Short-term persistence.</h3><p>Combines the last few observed/modelled hours with the next three hours. It is explicitly experimental and not an official meteorological forecast.</p><button id="nowcastRunBtn" class="lab-primary">RUN EXPERIMENT ↗</button><div id="nowcastResult" class="lab-output">Waiting for short-horizon analysis.</div></article>
+      </div>
+    </section>
+
+    <section id="about" class="section section-page section-yellow">
+      <div class="page-hero reveal"><span>07 / SYSTEM ARCHITECTURE</span><h2>Not just a UI.<br><em>A real prototype system.</em></h2><p>n8n orchestrates live sources, deterministic intelligence and Gemini while the frontend remains demo-safe with a direct weather fallback.</p></div>
+      <div class="architecture reveal"><div class="arch-node primary">WEB UI<small>HTML / CSS / JS</small></div><i>→</i><div class="arch-node core">n8n<small>ORCHESTRATION</small></div><i>→</i><div class="arch-stack"><div class="arch-node">OPEN-METEO<small>WEATHER + AQI</small></div><div class="arch-node">SACHET<small>OFFICIAL ALERTS</small></div><div class="arch-node">NASA EONET<small>NATURAL EVENTS</small></div><div class="arch-node">GEMINI<small>AI COPILOT</small></div></div></div>
+      <div class="system-bento reveal"><article><span>BUILT MODULES</span><ul class="feature-list"><li>Live forecast & geocoding</li><li>Air-quality intelligence</li><li>Explainable risk engine</li><li>Activity planner</li><li>Official CAP alerts</li><li>NASA EONET intelligence</li><li>Gemini grounded copilot</li><li>Voice + multilingual</li><li>Charts, map & comparison</li><li>100-capability atlas</li><li>Decision Studio: route, campus, event, trip, scenario & heat</li></ul></article><article class="stack-panel"><span>₹0 PROTOTYPE STACK</span><div class="stack-tags"><b>n8n Community</b><b>Open-Meteo</b><b>Gemini Free Tier</b><b>NDMA SACHET</b><b>NASA EONET V3</b><b>Leaflet</b><b>OpenStreetMap</b><b>Chart.js</b><b>Firebase Auth</b></div></article><article class="boundary-panel"><span>PROTOTYPE BOUNDARY</span><p>No paid hosting, domain, database, SMS or WhatsApp is required. Firebase email authentication and verification are included. Public deployment still requires endpoint hardening, secure hosting and production security review.</p><a href="features.html?build=20260905-v5">VIEW THE 100-CAPABILITY ATLAS ↗</a></article></div>
+    </section>
+  </main>
+
+  <div class="bottom-marquee" aria-hidden="true"><div><span>WEATHERGPT</span><span>WEATHERGPT</span><span>WEATHERGPT</span><span>WEATHERGPT</span><span>WEATHERGPT</span><span>WEATHERGPT</span></div></div>
+  <footer class="festival-footer"><div><b>WeatherGPT</b><span>Weather data → intelligence → action.</span></div><div><span>OPEN DATA / n8n / AI</span><a href="features.html?build=20260905-v5">100 FEATURES ↗</a></div></footer>
+
+  <div class="settings-drawer" id="settingsDrawer" aria-hidden="true"><div class="drawer-head"><div><span>SYSTEM SETTINGS</span><h3>Prototype configuration</h3></div><button id="closeSettings">×</button></div><label>n8n base URL<input id="n8nBaseInput" value="http://localhost:5678"/></label><label>Default city<input id="defaultCityInput" value="Nagercoil"/></label><label class="toggle"><input id="fallbackToggle" type="checkbox" checked><i></i><span>Allow direct Open-Meteo fallback</span></label><button id="saveSettings" class="primary-btn">SAVE SETTINGS</button><p class="drawer-note">Gemini key stays inside the local n8n environment and is never stored in this browser UI.</p></div>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div><div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="script.js?v=20260905-v5"></script><script src="intelligence.js?v=20260905-v5"></script>
+<script>window.addEventListener('weathergpt:auth-ready',e=>{const m=document.getElementById('accountEmailMenu');if(m)m.textContent=e.detail.user.email||'Verified account';});</script></body>
+</html>
